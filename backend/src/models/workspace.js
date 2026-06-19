@@ -40,6 +40,24 @@ const workspaceSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  monthlyLimit: {
+    type: Number,
+    default: 100,
+  },
+  plan: {
+    type: String,
+    enum: ['free', 'starter', 'pro', 'business'],
+    default: 'free',
+  },
+  usageResetAt: {
+    type: Date,
+    default: () => {
+      const d = new Date();
+      d.setMonth(d.getMonth() + 1, 1);
+      d.setHours(0, 0, 0, 0);
+      return d;
+    },
+  },
 }, {
   timestamps: true,
   toJSON: {

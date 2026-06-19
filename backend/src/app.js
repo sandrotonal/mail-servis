@@ -19,6 +19,7 @@ const apiKeyRoutes = require('./routes/apiKeys');
 const leadRoutes = require('./routes/leads');
 const smtpRoutes = require('./routes/smtp');
 const webhookRoutes = require('./routes/webhooks');
+const domainRoutes = require('./routes/domains');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
@@ -68,14 +69,18 @@ app.use((req, res, next) => {
 
 swaggerSetup(app);
 
+const { authenticate } = require('./middlewares/auth');
+const { checkWorkspaceAccess } = require('./middlewares/workspaceAccess');
+
 app.use(`${config.apiPrefix}/auth`, authRoutes);
 app.use(`${config.apiPrefix}/workspaces`, workspaceRoutes);
-app.use(`${config.apiPrefix}/workspaces/:workspaceId/projects`, projectRoutes);
+app.use(`${config.apiPrefix}/workspaces/:workspaceId/projects`, authenticate, checkWorkspaceAccess(['owner', 'admin', 'member']), projectRoutes);
 app.use(`${config.apiPrefix}/forms`, formRoutes);
-app.use(`${config.apiPrefix}/workspaces/:workspaceId/api-keys`, apiKeyRoutes);
-app.use(`${config.apiPrefix}/workspaces/:workspaceId/leads`, leadRoutes);
-app.use(`${config.apiPrefix}/workspaces/:workspaceId/smtp`, smtpRoutes);
-app.use(`${config.apiPrefix}/workspaces/:workspaceId/webhooks`, webhookRoutes);
+app.use(`${config.apiPrefix}/workspaces/:workspaceId/api-keys`, authenticate, checkWorkspaceAccess(['owner', 'admin']), apiKeyRoutes);
+app.use(`${config.apiPrefix}/workspaces/:workspaceId/leads`, authenticate, checkWorkspaceAccess(['owner', 'admin', 'member']), leadRoutes);
+app.use(`${config.apiPrefix}/workspaces/:workspaceId/smtp`, authenticate, checkWorkspaceAccess(['owner', 'admin']), smtpRoutes);
+app.use(`${config.apiPrefix}/workspaces/:workspaceId/webhooks`, authenticate, checkWorkspaceAccess(['owner', 'admin']), webhookRoutes);
+app.use(`${config.apiPrefix}/workspaces/:workspaceId/domains`, authenticate, checkWorkspaceAccess(['owner', 'admin']), domainRoutes);
 app.use(`${config.apiPrefix}/admin`, adminRoutes);
 
 app.get('/health', (req, res) => {

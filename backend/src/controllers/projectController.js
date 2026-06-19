@@ -23,7 +23,7 @@ const getAll = asyncHandler(async (req, res) => {
 });
 
 const getById = asyncHandler(async (req, res) => {
-  const project = await projectRepository.findById(req.params.projectId);
+  const project = await projectRepository.findOne({ _id: req.params.projectId, workspace: req.params.workspaceId });
   if (!project) throw new NotFoundError('Project not found.');
   res.status(200).json({
     success: true,
@@ -32,7 +32,10 @@ const getById = asyncHandler(async (req, res) => {
 });
 
 const update = asyncHandler(async (req, res) => {
-  const project = await projectRepository.findByIdAndUpdate(req.params.projectId, req.body);
+  const project = await projectRepository.findOneAndUpdate(
+    { _id: req.params.projectId, workspace: req.params.workspaceId },
+    req.body
+  );
   if (!project) throw new NotFoundError('Project not found.');
   res.status(200).json({
     success: true,
@@ -41,8 +44,9 @@ const update = asyncHandler(async (req, res) => {
 });
 
 const remove = asyncHandler(async (req, res) => {
-  const project = await projectRepository.findByIdAndDelete(req.params.projectId);
+  const project = await projectRepository.findOne({ _id: req.params.projectId, workspace: req.params.workspaceId });
   if (!project) throw new NotFoundError('Project not found.');
+  await projectRepository.findByIdAndDelete(project._id);
   res.status(200).json({
     success: true,
     message: 'Project deleted successfully.',
@@ -50,7 +54,7 @@ const remove = asyncHandler(async (req, res) => {
 });
 
 const updateFields = asyncHandler(async (req, res) => {
-  const project = await projectRepository.findById(req.params.projectId);
+  const project = await projectRepository.findOne({ _id: req.params.projectId, workspace: req.params.workspaceId });
   if (!project) throw new NotFoundError('Project not found.');
   project.fields = req.body.fields;
   await project.save();

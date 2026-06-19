@@ -14,6 +14,7 @@ router.post('/:projectId/send',
 
 router.get('/:projectId/submissions', authenticate, formController.getSubmissions);
 router.get('/:projectId/submissions/:submissionId', authenticate, formController.getSubmissionById);
+router.delete('/submissions/:submissionId', authenticate, formController.deleteSubmission);
 router.get('/:projectId/embed', formController.getProjectEmbed);
 
 module.exports = router;

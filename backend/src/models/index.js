@@ -10,6 +10,7 @@ const Domain = require('./domain');
 const Webhook = require('./webhook');
 const Message = require('./message');
 const Log = require('./log');
+const DailyAnalytics = require('./analytics');
 
 module.exports = {
   User,
@@ -24,4 +25,6 @@ module.exports = {
   Webhook,
   Message,
   Log,
+  DailyAnalytics,
 };
+

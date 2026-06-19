@@ -1,4 +1,5 @@
 const workspaceService = require('../services/workspaceService');
+const formService = require('../services/formService');
 const asyncHandler = require('../middlewares/asyncHandler');
 
 const create = asyncHandler(async (req, res) => {
@@ -96,7 +97,28 @@ const acceptInvite = asyncHandler(async (req, res) => {
   });
 });
 
+// GET /api/v1/workspaces/stats — Dashboard ana sayfasının ihtiyaç duyduğu istatistikler
+const getStats = asyncHandler(async (req, res) => {
+  const workspaceId = req.params.workspaceId || req.query.workspaceId;
+  let targetWorkspaceId = workspaceId;
+
+  if (!targetWorkspaceId) {
+    const workspaces = await workspaceService.getUserWorkspaces(req.user._id);
+    if (workspaces.length === 0) {
+      return res.status(200).json({
+        success: true,
+        data: { totalSubmissions: 0, totalLeads: 0, dailyStats: [], leadStatusCounts: [] },
+      });
+    }
+    targetWorkspaceId = workspaces[0]._id;
+  }
+
+  const stats = await formService.getSubmissionStats(targetWorkspaceId);
+  res.status(200).json({ success: true, data: stats });
+});
+
 module.exports = {
   create, getAll, getById, update, remove,
   inviteMember, getMembers, updateMemberRole, removeMember, acceptInvite,
+  getStats,
 };

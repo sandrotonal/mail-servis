@@ -68,4 +68,18 @@ const test = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { create, getAll, update, remove, test };
+const setDefault = asyncHandler(async (req, res) => {
+  const workspaceId = req.params.workspaceId;
+  // Unset all existing defaults for this workspace
+  await SmtpProvider.updateMany({ workspace: workspaceId }, { isPrimary: false });
+  const provider = await SmtpProvider.findOneAndUpdate(
+    { _id: req.params.providerId, workspace: workspaceId },
+    { isPrimary: true },
+    { new: true }
+  );
+  if (!provider) throw new NotFoundError('SMTP provider not found.');
+  res.status(200).json({ success: true, data: { provider } });
+});
+
+module.exports = { create, getAll, update, remove, test, setDefault };
+

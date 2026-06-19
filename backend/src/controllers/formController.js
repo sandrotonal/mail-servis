@@ -37,6 +37,20 @@ const submitForm = asyncHandler(async (req, res) => {
 
 const getSubmissions = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
+  const project = await projectRepository.findByProjectId(projectId);
+  if (!project) throw new NotFoundError('Project not found.');
+
+  const { WorkspaceMember } = require('../models');
+  const membership = await WorkspaceMember.findOne({
+    workspace: project.workspace,
+    user: req.user._id,
+    status: 'active',
+  });
+
+  if (!membership && req.user.role !== 'super_admin') {
+    throw new NotFoundError('Project not found.');
+  }
+
   const result = await formService.getSubmissions(projectId, req.query);
   res.status(200).json({
     success: true,
@@ -47,8 +61,20 @@ const getSubmissions = asyncHandler(async (req, res) => {
 const getSubmissionById = asyncHandler(async (req, res) => {
   const { Submission } = require('../models');
   const submission = await Submission.findById(req.params.submissionId)
-    .populate('project', 'name projectId');
+    .populate('project', 'name projectId workspace');
   if (!submission) throw new NotFoundError('Submission not found.');
+
+  const { WorkspaceMember } = require('../models');
+  const membership = await WorkspaceMember.findOne({
+    workspace: submission.project.workspace,
+    user: req.user._id,
+    status: 'active',
+  });
+
+  if (!membership && req.user.role !== 'super_admin') {
+    throw new NotFoundError('Submission not found.');
+  }
+
   res.status(200).json({
     success: true,
     data: { submission },
@@ -83,4 +109,33 @@ const getProjectEmbed = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { submitForm, getSubmissions, getSubmissionById, getProjectEmbed };
+const deleteSubmission = asyncHandler(async (req, res) => {
+  const { Submission, WorkspaceMember } = require('../models');
+  const { ForbiddenError } = require('../utils/errors');
+  const submission = await Submission.findById(req.params.submissionId)
+    .populate('project', 'workspace');
+  if (!submission) throw new NotFoundError('Submission not found.');
+
+  const membership = await WorkspaceMember.findOne({
+    workspace: submission.project.workspace,
+    user: req.user._id,
+    status: 'active',
+  });
+
+  if (!membership && req.user.role !== 'super_admin') {
+    throw new NotFoundError('Submission not found.');
+  }
+
+  if (!['owner', 'admin'].includes(membership.role) && req.user.role !== 'super_admin') {
+    throw new ForbiddenError('You do not have permission to delete submissions.');
+  }
+
+  await Submission.findByIdAndDelete(req.params.submissionId);
+
+  res.status(200).json({
+    success: true,
+    message: 'Submission deleted successfully.',
+  });
+});
+
+module.exports = { submitForm, getSubmissions, getSubmissionById, getProjectEmbed, deleteSubmission };

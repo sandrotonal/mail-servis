@@ -74,3 +74,4 @@ process.on('uncaughtException', (error) => {
 });
 
 startServer();
+// Trigger nodemon reload to connect to running database and cache containers

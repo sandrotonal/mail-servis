@@ -3,6 +3,7 @@ const workspaceRepository = require('./workspaceRepository');
 const projectRepository = require('./projectRepository');
 const submissionRepository = require('./submissionRepository');
 const leadRepository = require('./leadRepository');
+const apiKeyRepository = require('./apiKeyRepository');
 
 module.exports = {
   userRepository,
@@ -10,4 +11,6 @@ module.exports = {
   projectRepository,
   submissionRepository,
   leadRepository,
+  apiKeyRepository,
 };
+

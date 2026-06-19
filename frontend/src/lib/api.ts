@@ -83,6 +83,14 @@ class ApiClient {
   delete<T>(endpoint: string, options?: ApiOptions) {
     return this.request<T>(endpoint, { ...options, method: "DELETE" })
   }
+
+  patch<T>(endpoint: string, body?: unknown, options?: ApiOptions) {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: "PATCH",
+      body: body ? JSON.stringify(body) : undefined,
+    })
+  }
 }
 
 export class ApiError extends Error {

@@ -17,27 +17,32 @@ const getAll = asyncHandler(async (req, res) => {
 });
 
 const getById = asyncHandler(async (req, res) => {
-  const lead = await leadRepository.findById(req.params.leadId)
-    .populate('assignedTo', 'name email')
-    .populate('notes.addedBy', 'name');
+  const lead = await leadRepository.findOne({ _id: req.params.leadId, workspace: req.params.workspaceId });
   if (!lead) throw new NotFoundError('Lead not found.');
+  await lead.populate([
+    { path: 'assignedTo', select: 'name email' },
+    { path: 'notes.addedBy', select: 'name' }
+  ]);
   res.status(200).json({ success: true, data: { lead } });
 });
 
 const updateStatus = asyncHandler(async (req, res) => {
-  const lead = await leadRepository.updateStatus(req.params.leadId, req.body.status);
+  const lead = await leadRepository.findOne({ _id: req.params.leadId, workspace: req.params.workspaceId });
   if (!lead) throw new NotFoundError('Lead not found.');
-  res.status(200).json({ success: true, data: { lead } });
+  const updatedLead = await leadRepository.updateStatus(lead._id, req.body.status);
+  res.status(200).json({ success: true, data: { lead: updatedLead } });
 });
 
 const addNote = asyncHandler(async (req, res) => {
+  const lead = await leadRepository.findOne({ _id: req.params.leadId, workspace: req.params.workspaceId });
+  if (!lead) throw new NotFoundError('Lead not found.');
+
   const note = {
     content: req.body.content,
     addedBy: req.user._id,
   };
-  const lead = await leadRepository.addNote(req.params.leadId, note);
-  if (!lead) throw new NotFoundError('Lead not found.');
-  res.status(200).json({ success: true, data: { lead } });
+  const updatedLead = await leadRepository.addNote(lead._id, note);
+  res.status(200).json({ success: true, data: { lead: updatedLead } });
 });
 
 const getStats = asyncHandler(async (req, res) => {
