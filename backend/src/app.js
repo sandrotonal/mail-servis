@@ -29,8 +29,21 @@ app.use(helmet({
   contentSecurityPolicy: false,
 }));
 
+const corsOrigin = config.env === 'development'
+  ? (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (/^https?:\/\/localhost(:\d+)?$/.test(origin) || /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin)) {
+        return callback(null, true);
+      }
+      if (origin === config.frontendUrl) {
+        return callback(null, true);
+      }
+      callback(new Error('Not allowed by CORS'));
+    }
+  : [config.frontendUrl, ...(process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean)];
+
 app.use(cors({
-  origin: [config.frontendUrl, ...(process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean)],
+  origin: corsOrigin,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-API-KEY', 'X-Webhook-Secret'],
