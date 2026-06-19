@@ -107,45 +107,85 @@ export default function WebhooksPage() {
 
       <AnimatePresence>
         {showForm && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" onClick={() => setShowForm(false)} />
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-card border border-border rounded-2xl p-6 shadow-2xl z-50">
-              <h2 className="text-xl font-semibold mb-4">Webhook Ekle</h2>
-              <div className="space-y-4">
+          <div className="modal-overlay" onClick={() => setShowForm(false)}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="modal-container"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between border-b border-border/60 pb-4 mb-6">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Webhook className="w-5.5 h-5.5 text-[#7342E2]" />
+                  Webhook Ekle
+                </h2>
+                <button
+                  onClick={() => setShowForm(false)}
+                  className="text-muted-foreground hover:text-white transition-colors text-lg font-bold"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="space-y-5">
                 <div>
-                  <label className="text-sm font-medium mb-1.5 block">Ad *</label>
-                  <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="input-premium" placeholder="Slack Bildirimi" />
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Ad *</label>
+                  <input
+                    value={form.name}
+                    onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))}
+                    className="input-premium"
+                    placeholder="örn. Slack Bildirimi"
+                  />
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-1.5 block">URL *</label>
-                  <input value={form.url} onChange={e => setForm(f => ({ ...f, url: e.target.value }))} className="input-premium" placeholder="https://hooks.slack.com/..." />
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">URL *</label>
+                  <input
+                    value={form.url}
+                    onChange={(e) => setForm(f => ({ ...f, url: e.target.value }))}
+                    className="input-premium"
+                    placeholder="https://hooks.slack.com/services/..."
+                  />
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-1.5 block">Olaylar *</label>
-                  <div className="space-y-2">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2.5 block">Tetiklenecek Olaylar *</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 bg-secondary/30 border border-border p-4.5 rounded-2xl">
                     {WEBHOOK_EVENTS.map(ev => (
-                      <label key={ev.value} className="flex items-center gap-2.5 cursor-pointer group">
-                        <div onClick={() => toggleEvent(ev.value)}
-                          className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors cursor-pointer ${form.events.includes(ev.value) ? "bg-[#7342E2] border-[#7342E2]" : "border-border group-hover:border-[#7342E2]/50"}`}>
-                          {form.events.includes(ev.value) && <Check className="w-3 h-3 text-white" />}
+                      <label key={ev.value} className="flex items-center gap-2.5 cursor-pointer group select-none">
+                        <div
+                          onClick={() => toggleEvent(ev.value)}
+                          className={`w-4.5 h-4.5 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer ${
+                            form.events.includes(ev.value)
+                              ? "bg-[#7342E2] border-[#7342E2] scale-105 shadow-md shadow-[#7342E2]/20"
+                              : "border-border/80 group-hover:border-[#7342E2]/50"
+                          }`}
+                        >
+                          {form.events.includes(ev.value) && <Check className="w-3.5 h-3.5 text-white" />}
                         </div>
-                        <span className="text-sm">{ev.label}</span>
+                        <span className="text-sm font-semibold text-muted-foreground group-hover:text-white transition-colors">{ev.label}</span>
                       </label>
                     ))}
                   </div>
                 </div>
-                <div className="flex gap-3 pt-2">
-                  <button onClick={saveWebhook} disabled={saving || !form.name || !form.url || form.events.length === 0}
-                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 disabled:opacity-50 transition-colors">
-                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />} Kaydet
+                <div className="flex gap-3.5 pt-3">
+                  <button
+                    onClick={saveWebhook}
+                    disabled={saving || !form.name || !form.url || form.events.length === 0}
+                    className="flex-1 btn-primary"
+                  >
+                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
+                    Kaydet
                   </button>
-                  <button onClick={() => setShowForm(false)} className="flex-1 rounded-xl border border-border px-4 py-2.5 text-sm font-medium hover:bg-secondary transition-colors">İptal</button>
+                  <button
+                    onClick={() => setShowForm(false)}
+                    className="flex-1 btn-secondary"
+                  >
+                    İptal
+                  </button>
                 </div>
               </div>
             </motion.div>
-          </>
+          </div>
         )}
       </AnimatePresence>
 

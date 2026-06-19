@@ -7,7 +7,14 @@ class ProjectRepository extends BaseRepository {
   }
 
   async findByProjectId(projectId) {
-    return this.findOne({ projectId });
+    const mongoose = require('mongoose');
+    const filter = {
+      $or: [
+        { projectId },
+        ...(mongoose.Types.ObjectId.isValid(projectId) ? [{ _id: projectId }] : []),
+      ],
+    };
+    return this.findOne(filter);
   }
 
   async findByWorkspace(workspaceId, options = {}) {

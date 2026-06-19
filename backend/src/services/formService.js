@@ -114,11 +114,12 @@ class FormService {
   }
 
   async getSubmissionStats(workspaceId) {
-    const [totalSubmissions, totalLeads, recentSubmissions, statusCounts] = await Promise.all([
+    const [totalSubmissions, totalLeads, recentSubmissions, statusCounts, recentSubmissionsList] = await Promise.all([
       submissionRepository.countDocuments({ workspace: workspaceId }),
       leadRepository.countDocuments({ workspace: workspaceId }),
       submissionRepository.getDailyStats(workspaceId, 30),
       leadRepository.getStatusCounts(workspaceId),
+      Submission.find({ workspace: workspaceId }).sort({ createdAt: -1 }).limit(5).populate('project', 'name'),
     ]);
 
     return {
@@ -126,6 +127,7 @@ class FormService {
       totalLeads,
       dailyStats: recentSubmissions,
       leadStatusCounts: statusCounts,
+      recentSubmissions: recentSubmissionsList || [],
     };
   }
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { toast } from "sonner"
 import { api } from "@/lib/api"
@@ -11,6 +11,12 @@ export default function SettingsPage() {
   const { activeWorkspace, refreshWorkspaces } = useWorkspace()
   const [wsName, setWsName] = useState(activeWorkspace?.name || "")
   const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    if (activeWorkspace) {
+      setWsName(activeWorkspace.name)
+    }
+  }, [activeWorkspace])
 
   const saveWorkspace = async () => {
     if (!activeWorkspace || !wsName.trim()) return

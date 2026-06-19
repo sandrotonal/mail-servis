@@ -19,44 +19,44 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
+    --background: 240 10% 98.5%;
+    --foreground: 240 10% 4%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 9%;
+    --card-foreground: 240 10% 4%;
+    --primary: 258 74% 57%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 94%;
+    --secondary-foreground: 240 10% 4%;
+    --muted: 240 5% 94%;
+    --muted-foreground: 240 5% 45%;
+    --accent: 240 5% 94%;
+    --accent-foreground: 240 10% 4%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 9%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 258 74% 57%;
     --radius: 0.75rem;
   }
 
   .dark {
-    --background: 0 0% 3%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 6%;
-    --card-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 0 0% 10%;
-    --accent-foreground: 0 0% 98%;
+    --background: 224 25% 6%;
+    --foreground: 224 10% 96%;
+    --card: 224 25% 9.5%;
+    --card-foreground: 224 10% 96%;
+    --primary: 258 74% 57%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 224 20% 13%;
+    --secondary-foreground: 224 10% 96%;
+    --muted: 224 15% 13%;
+    --muted-foreground: 224 10% 65%;
+    --accent: 224 20% 13%;
+    --accent-foreground: 224 10% 96%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 0 0% 98%;
+    --border: 224 20% 16.5%;
+    --input: 224 20% 16.5%;
+    --ring: 258 74% 57%;
   }
 }
 
@@ -87,38 +87,45 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium;
-    @apply hover:opacity-90 transition-all duration-200;
-    @apply focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
-    @apply inline-flex items-center justify-center;
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-xl font-semibold;
+    @apply hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300;
+    @apply focus:outline-none focus:ring-2 focus:ring-[#7342E2]/50;
+    @apply inline-flex items-center justify-center gap-2;
   }
 
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-medium;
-    @apply hover:bg-secondary/80 transition-all duration-200;
-    @apply focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
-    @apply inline-flex items-center justify-center;
+    @apply bg-secondary text-secondary-foreground px-6 py-3 rounded-xl font-semibold;
+    @apply hover:bg-secondary/80 border border-border hover:scale-[1.02] active:scale-[0.98] transition-all duration-300;
+    @apply focus:outline-none focus:ring-2 focus:ring-ring;
+    @apply inline-flex items-center justify-center gap-2;
   }
 
   .card-premium {
-    @apply bg-card border border-border rounded-xl p-6;
-    @apply shadow-sm hover:shadow-md transition-all duration-200;
-    @apply backdrop-blur-sm;
+    @apply bg-card border border-border rounded-2xl p-6;
+    @apply shadow-lg hover:shadow-xl hover:border-[#7342E2]/30 transition-all duration-300;
+    @apply backdrop-blur-md relative;
   }
 
   .card-glass {
-    @apply bg-card/50 border border-border/50 rounded-xl p-6;
-    @apply backdrop-blur-md shadow-lg;
-    @apply hover:bg-card/60 transition-all duration-300;
+    @apply bg-card/60 border border-border/80 rounded-2xl p-6;
+    @apply backdrop-blur-xl shadow-xl;
+    @apply hover:bg-card/75 hover:border-[#7342E2]/40 transition-all duration-300;
   }
 
   .input-premium {
-    @apply w-full px-4 py-3 bg-background border border-input rounded-lg;
-    @apply focus:outline-none focus:ring-2 focus:border-transparent;
-    @apply transition-all duration-200 placeholder:text-muted-foreground text-sm;
-    --tw-ring-color: #7342E2;
+    @apply w-full px-4 py-3 bg-background/50 border border-border rounded-xl;
+    @apply focus:outline-none focus:ring-2 focus:ring-[#7342E2]/30 focus:border-[#7342E2];
+    @apply transition-all duration-300 placeholder:text-muted-foreground/60 text-sm;
   }
 
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4;
+  }
+
+  .modal-container {
+    @apply bg-card border border-border rounded-3xl p-8 shadow-2xl z-50 w-full max-w-lg relative overflow-hidden;
+    @apply backdrop-blur-2xl transition-all duration-300;
+  }
 
   .gradient-primary {
     @apply bg-gradient-to-r from-primary to-primary/70;

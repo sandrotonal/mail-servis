@@ -119,24 +119,30 @@ export default function ApiKeysPage() {
       {/* Create Modal */}
       <AnimatePresence>
         {showCreate && (
-          <>
+          <div className="modal-overlay" onClick={() => setShowCreate(false)}>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-              onClick={() => setShowCreate(false)}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-card border border-border rounded-2xl p-6 shadow-2xl z-50"
+              className="modal-container"
+              onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="text-xl font-semibold mb-4">Yeni API Key Oluştur</h2>
-              <div className="space-y-4">
+              <div className="flex items-center justify-between border-b border-border/60 pb-4 mb-6">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Key className="w-5.5 h-5.5 text-[#7342E2]" />
+                  Yeni API Key Oluştur
+                </h2>
+                <button
+                  onClick={() => setShowCreate(false)}
+                  className="text-muted-foreground hover:text-white transition-colors text-lg font-bold"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="space-y-5">
                 <div>
-                  <label className="text-sm font-medium mb-1.5 block">Key Adı *</label>
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Key Adı *</label>
                   <input
                     value={newKeyName}
                     onChange={(e) => setNewKeyName(e.target.value)}
@@ -146,22 +152,25 @@ export default function ApiKeysPage() {
                     onKeyDown={(e) => e.key === "Enter" && createKey()}
                   />
                 </div>
-                <div className="flex gap-3 pt-2">
+                <div className="flex gap-3.5 pt-3">
                   <button
                     onClick={createKey}
                     disabled={creating || !newKeyName.trim()}
-                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 disabled:opacity-50 transition-colors"
+                    className="flex-1 btn-primary"
                   >
                     {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
                     Oluştur
                   </button>
-                  <button onClick={() => setShowCreate(false)} className="flex-1 rounded-xl border border-border px-4 py-2.5 text-sm font-medium hover:bg-secondary transition-colors">
+                  <button
+                    onClick={() => setShowCreate(false)}
+                    className="flex-1 btn-secondary"
+                  >
                     İptal
                   </button>
                 </div>
               </div>
             </motion.div>
-          </>
+          </div>
         )}
       </AnimatePresence>
 

@@ -9,21 +9,21 @@ import { authService } from "@/lib/auth"
 import { toast } from "sonner"
 import { useState } from "react"
 import {
-  LayoutDashboard, FolderKanban, Users, Mail, Key,
-  Settings, Webhook, MailCheck, LogOut, Globe,
-  ChevronDown, Check, PlusCircle,
-} from "lucide-react"
+  IconLayoutDashboard, IconMail, IconUsers, IconKey, IconMailCheck,
+  IconWebhook, IconGlobe, IconFolder, IconSettings, IconLogout,
+  IconChevronDown, IconCheck, IconPlus
+} from "@tabler/icons-react"
 
 const navItems = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard", exact: true },
-  { href: "/dashboard/projects", icon: Mail, label: "Projeler" },
-  { href: "/dashboard/leads", icon: Users, label: "Lead'ler" },
-  { href: "/dashboard/api-keys", icon: Key, label: "API Keys" },
-  { href: "/dashboard/smtp", icon: MailCheck, label: "SMTP" },
-  { href: "/dashboard/webhooks", icon: Webhook, label: "Webhooks" },
-  { href: "/dashboard/domains", icon: Globe, label: "Domainler" },
-  { href: "/dashboard/workspaces", icon: FolderKanban, label: "Workspace'ler" },
-  { href: "/dashboard/settings", icon: Settings, label: "Ayarlar" },
+  { href: "/dashboard", icon: IconLayoutDashboard, label: "Dashboard", exact: true },
+  { href: "/dashboard/projects", icon: IconMail, label: "Projeler" },
+  { href: "/dashboard/leads", icon: IconUsers, label: "Lead'ler" },
+  { href: "/dashboard/api-keys", icon: IconKey, label: "API Keys" },
+  { href: "/dashboard/smtp", icon: IconMailCheck, label: "SMTP" },
+  { href: "/dashboard/webhooks", icon: IconWebhook, label: "Webhooks" },
+  { href: "/dashboard/domains", icon: IconGlobe, label: "Domainler" },
+  { href: "/dashboard/workspaces", icon: IconFolder, label: "Workspace'ler" },
+  { href: "/dashboard/settings", icon: IconSettings, label: "Ayarlar" },
 ]
 
 export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
@@ -33,27 +33,38 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
   const [wsDropdownOpen, setWsDropdownOpen] = useState(false)
 
   const handleLogout = async () => {
-    await authService.logout()
-    toast.success("Çıkış yapıldı")
-    router.push("/auth/login")
+    try {
+      await authService.logout()
+      toast.success("Çıkış yapıldı")
+      router.push("/auth/login")
+    } catch (_) {
+      toast.error("Çıkış yapılırken bir hata oluştu")
+    }
   }
 
   return (
     <aside className={cn(
-      "fixed left-0 top-0 z-40 h-screen bg-card border-r border-border transition-all duration-300 flex flex-col",
+      "fixed left-0 top-0 z-40 h-screen bg-card/65 border-r border-border backdrop-blur-xl transition-all duration-300 flex flex-col",
       collapsed ? "w-20" : "w-64"
     )}>
       {/* Logo */}
-      <div className="flex h-16 items-center px-4 border-b border-border shrink-0 gap-2">
+      <div className="flex h-16 items-center px-4 border-b border-border/80 shrink-0 gap-2.5">
         <button
           onClick={onToggle}
-          className="w-8 h-8 rounded-lg bg-[#7342E2] flex items-center justify-center hover:scale-105 transition-transform shrink-0"
+          className="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-[#7342E2] to-[#9F7AEA] flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 shrink-0 shadow-lg shadow-[#7342E2]/25"
           aria-label="Toggle sidebar"
         >
-          <Mail className="w-4 h-4 text-white" />
+          <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 2L11 13" />
+            <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+          </svg>
+          <div className="absolute inset-0 rounded-xl bg-[#7342E2]/30 blur-md opacity-0 hover:opacity-100 transition-opacity duration-300 -z-10" />
         </button>
         {!collapsed && (
-          <span className="font-bold text-lg tracking-tight truncate">MailServis</span>
+          <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent truncate flex items-center gap-1.5 font-sans">
+            MailServis
+            <span className="text-[10px] bg-primary/20 text-[#a78bfa] border border-[#7342E2]/30 px-1.5 py-0.5 rounded-md font-semibold tracking-wide">SaaS</span>
+          </span>
         )}
       </div>
 
@@ -62,10 +73,10 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
         <div className="px-3 pt-3 pb-2 relative">
           <button
             onClick={() => setWsDropdownOpen(!wsDropdownOpen)}
-            className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors text-sm font-medium"
+            className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl bg-secondary/80 border border-border/50 hover:bg-secondary transition-colors text-sm font-medium"
           >
             <span className="truncate">{activeWorkspace?.name || "Workspace Seç"}</span>
-            <ChevronDown className={cn("w-4 h-4 shrink-0 transition-transform", wsDropdownOpen && "rotate-180")} />
+            <IconChevronDown className={cn("w-4 h-4 shrink-0 text-muted-foreground transition-transform duration-300", wsDropdownOpen && "rotate-180")} />
           </button>
 
           <AnimatePresence>
@@ -75,25 +86,25 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.15 }}
-                className="absolute left-3 right-3 top-full mt-1 bg-card border border-border rounded-lg shadow-lg z-50 overflow-hidden"
+                className="absolute left-3 right-3 top-full mt-1 bg-card/95 border border-border rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-xl"
               >
                 {workspaces.map((ws) => (
                   <button
                     key={ws._id}
                     onClick={() => { setActiveWorkspace(ws); setWsDropdownOpen(false) }}
-                    className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-secondary transition-colors"
+                    className="w-full flex items-center justify-between px-3 py-2.5 text-sm hover:bg-secondary/70 transition-colors text-left"
                   >
-                    <span className="truncate">{ws.name}</span>
-                    {activeWorkspace?._id === ws._id && <Check className="w-4 h-4 text-[#7342E2] shrink-0" />}
+                    <span className="truncate font-medium">{ws.name}</span>
+                    {activeWorkspace?._id === ws._id && <IconCheck className="w-4 h-4 text-[#7342E2] shrink-0" />}
                   </button>
                 ))}
                 <div className="border-t border-border">
                   <Link
                     href="/dashboard/workspaces"
                     onClick={() => setWsDropdownOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:bg-secondary transition-colors"
+                    className="flex items-center gap-2 px-3 py-2.5 text-sm text-[#a78bfa] hover:bg-secondary/70 transition-colors"
                   >
-                    <PlusCircle className="w-4 h-4" />
+                    <IconPlus className="w-4 h-4" />
                     Workspace Ekle
                   </Link>
                 </div>
@@ -120,10 +131,10 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
                 href={item.href}
                 title={collapsed ? item.label : undefined}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 relative overflow-hidden group",
+                  "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all duration-200 relative overflow-hidden group",
                   isActive
-                    ? "bg-[#7342E2] text-white shadow-sm shadow-[#7342E2]/30"
-                    : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+                    ? "bg-[#7342E2] text-white shadow-lg shadow-[#7342E2]/20"
+                    : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground",
                   collapsed && "justify-center"
                 )}
               >
@@ -140,11 +151,11 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
         <button
           onClick={handleLogout}
           className={cn(
-            "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200 w-full",
+            "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200 w-full",
             collapsed && "justify-center"
           )}
         >
-          <LogOut className="w-5 h-5 shrink-0" />
+          <IconLogout className="w-5 h-5 shrink-0" />
           {!collapsed && <span>Çıkış Yap</span>}
         </button>
       </div>

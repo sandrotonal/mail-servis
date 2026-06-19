@@ -133,64 +133,140 @@ export default function SmtpPage() {
       {/* Create Form Modal */}
       <AnimatePresence>
         {showForm && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" onClick={() => setShowForm(false)} />
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-card border border-border rounded-2xl p-6 shadow-2xl z-50 overflow-y-auto max-h-[90vh]">
-              <h2 className="text-xl font-semibold mb-4">SMTP Provider Ekle</h2>
-              {/* Quick presets */}
-              <div className="flex flex-wrap gap-2 mb-4">
-                {PRESETS.map((p) => (
-                  <button key={p.label} onClick={() => setForm(f => ({ ...f, host: p.host, port: p.port, secure: p.secure, name: p.label }))}
-                    className="px-3 py-1.5 text-xs rounded-lg border border-border hover:bg-secondary hover:border-[#7342E2]/50 transition-colors font-medium">
-                    {p.label}
-                  </button>
-                ))}
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
-                  <label className="text-sm font-medium mb-1.5 block">Ad *</label>
-                  <input value={form.name} onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))} className="input-premium" placeholder="Gmail Ana" />
-                </div>
-                <div className="col-span-2 sm:col-span-1">
-                  <label className="text-sm font-medium mb-1.5 block">Host *</label>
-                  <input value={form.host} onChange={(e) => setForm(f => ({ ...f, host: e.target.value }))} className="input-premium" placeholder="smtp.gmail.com" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-1.5 block">Port</label>
-                  <input type="number" value={form.port} onChange={(e) => setForm(f => ({ ...f, port: Number(e.target.value) }))} className="input-premium" />
-                </div>
-                <div className="col-span-2">
-                  <label className="text-sm font-medium mb-1.5 block">Kullanıcı Adı *</label>
-                  <input value={form.username} onChange={(e) => setForm(f => ({ ...f, username: e.target.value }))} className="input-premium" placeholder="user@gmail.com" />
-                </div>
-                <div className="col-span-2">
-                  <label className="text-sm font-medium mb-1.5 block">Şifre / App Password *</label>
-                  <input type="password" value={form.password} onChange={(e) => setForm(f => ({ ...f, password: e.target.value }))} className="input-premium" placeholder="••••••••••" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-1.5 block">Gönderici Adı</label>
-                  <input value={form.fromName} onChange={(e) => setForm(f => ({ ...f, fromName: e.target.value }))} className="input-premium" placeholder="Şirket Adı" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-1.5 block">Gönderici Email</label>
-                  <input value={form.fromEmail} onChange={(e) => setForm(f => ({ ...f, fromEmail: e.target.value }))} className="input-premium" placeholder="noreply@..." />
-                </div>
-                <div className="col-span-2 flex items-center gap-2">
-                  <input type="checkbox" id="secure" checked={form.secure} onChange={(e) => setForm(f => ({ ...f, secure: e.target.checked }))} className="rounded" />
-                  <label htmlFor="secure" className="text-sm">SSL/TLS (port 465)</label>
-                </div>
-              </div>
-              <div className="flex gap-3 mt-6">
-                <button onClick={saveProvider} disabled={saving || !form.name || !form.host || !form.username || !form.password}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 disabled:opacity-50 transition-colors">
-                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} Kaydet
+          <div className="modal-overlay" onClick={() => setShowForm(false)}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="modal-container overflow-y-auto max-h-[90vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between border-b border-border/60 pb-4 mb-6">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <MailCheck className="w-5.5 h-5.5 text-[#7342E2]" />
+                  SMTP Provider Ekle
+                </h2>
+                <button
+                  onClick={() => setShowForm(false)}
+                  className="text-muted-foreground hover:text-white transition-colors text-lg font-bold"
+                >
+                  ×
                 </button>
-                <button onClick={() => setShowForm(false)} className="flex-1 rounded-xl border border-border px-4 py-2.5 text-sm font-medium hover:bg-secondary transition-colors">İptal</button>
+              </div>
+
+              {/* Quick presets */}
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Hazır Şablonlar</label>
+                  <div className="flex flex-wrap gap-2">
+                    {PRESETS.map((p) => (
+                      <button
+                        key={p.label}
+                        onClick={() => setForm(f => ({ ...f, host: p.host, port: p.port, secure: p.secure, name: p.label }))}
+                        className="px-3 py-1.5 text-xs rounded-xl border border-border bg-secondary/40 hover:bg-[#7342E2]/10 hover:border-[#7342E2]/50 transition-colors font-semibold text-white"
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="col-span-2">
+                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Ad *</label>
+                    <input
+                      value={form.name}
+                      onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))}
+                      className="input-premium"
+                      placeholder="örn. Gmail Ana Hesabı"
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Host *</label>
+                    <input
+                      value={form.host}
+                      onChange={(e) => setForm(f => ({ ...f, host: e.target.value }))}
+                      className="input-premium"
+                      placeholder="smtp.gmail.com"
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Port *</label>
+                    <input
+                      type="number"
+                      value={form.port}
+                      onChange={(e) => setForm(f => ({ ...f, port: Number(e.target.value) }))}
+                      className="input-premium"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Kullanıcı Adı *</label>
+                    <input
+                      value={form.username}
+                      onChange={(e) => setForm(f => ({ ...f, username: e.target.value }))}
+                      className="input-premium"
+                      placeholder="user@gmail.com"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Şifre / App Password *</label>
+                    <input
+                      type="password"
+                      value={form.password}
+                      onChange={(e) => setForm(f => ({ ...f, password: e.target.value }))}
+                      className="input-premium"
+                      placeholder="••••••••••"
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Gönderici Adı</label>
+                    <input
+                      value={form.fromName}
+                      onChange={(e) => setForm(f => ({ ...f, fromName: e.target.value }))}
+                      className="input-premium"
+                      placeholder="örn. MailServis"
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Gönderici Email</label>
+                    <input
+                      value={form.fromEmail}
+                      onChange={(e) => setForm(f => ({ ...f, fromEmail: e.target.value }))}
+                      className="input-premium"
+                      placeholder="noreply@..."
+                    />
+                  </div>
+                  <div className="col-span-2 flex items-center gap-2.5 pt-1.5">
+                    <input
+                      type="checkbox"
+                      id="secure"
+                      checked={form.secure}
+                      onChange={(e) => setForm(f => ({ ...f, secure: e.target.checked }))}
+                      className="rounded border-border text-[#7342E2] focus:ring-[#7342E2] w-4.5 h-4.5"
+                    />
+                    <label htmlFor="secure" className="text-sm font-semibold text-white select-none">SSL/TLS (port 465)</label>
+                  </div>
+                </div>
+
+                <div className="flex gap-3.5 pt-4">
+                  <button
+                    onClick={saveProvider}
+                    disabled={saving || !form.name || !form.host || !form.username || !form.password}
+                    className="flex-1 btn-primary"
+                  >
+                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                    Kaydet
+                  </button>
+                  <button
+                    onClick={() => setShowForm(false)}
+                    className="flex-1 btn-secondary"
+                  >
+                    İptal
+                  </button>
+                </div>
               </div>
             </motion.div>
-          </>
+          </div>
         )}
       </AnimatePresence>
 

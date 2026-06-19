@@ -69,13 +69,16 @@ export default function ProjectsPage() {
 
   const toggleProject = async (project: Project) => {
     if (!activeWorkspace) return
+    // Optimistic update
+    setProjects(prev => prev.map(p => p._id === project._id ? { ...p, isActive: !p.isActive } : p))
     try {
       await api.put(`/workspaces/${activeWorkspace._id}/projects/${project._id}`, {
         isActive: !project.isActive,
       })
       toast.success(project.isActive ? "Proje devre dışı bırakıldı" : "Proje aktif edildi")
-      fetchProjects()
     } catch (err: unknown) {
+      // Revert if error
+      setProjects(prev => prev.map(p => p._id === project._id ? { ...p, isActive: project.isActive } : p))
       toast.error(err instanceof Error ? err.message : "Hata oluştu")
     }
   }
@@ -83,11 +86,14 @@ export default function ProjectsPage() {
   const deleteProject = async (project: Project) => {
     if (!confirm(`"${project.name}" projesini silmek istediğinize emin misiniz?`)) return
     if (!activeWorkspace) return
+    // Optimistic delete
+    setProjects(prev => prev.filter(p => p._id !== project._id))
     try {
       await api.delete(`/workspaces/${activeWorkspace._id}/projects/${project._id}`)
       toast.success("Proje silindi")
-      fetchProjects()
     } catch (err: unknown) {
+      // Revert if error
+      fetchProjects()
       toast.error(err instanceof Error ? err.message : "Hata oluştu")
     }
   }
@@ -116,24 +122,30 @@ export default function ProjectsPage() {
       {/* Create Modal */}
       <AnimatePresence>
         {showCreate && (
-          <>
+          <div className="modal-overlay" onClick={() => setShowCreate(false)}>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-              onClick={() => setShowCreate(false)}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-card border border-border rounded-2xl p-6 shadow-2xl z-50"
+              className="modal-container"
+              onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="text-xl font-semibold mb-4">Yeni Proje Oluştur</h2>
-              <div className="space-y-4">
+              <div className="flex items-center justify-between border-b border-border/60 pb-4 mb-6">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Mail className="w-5.5 h-5.5 text-[#7342E2]" />
+                  Yeni Proje Oluştur
+                </h2>
+                <button
+                  onClick={() => setShowCreate(false)}
+                  className="text-muted-foreground hover:text-white transition-colors text-lg font-bold"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="space-y-5">
                 <div>
-                  <label className="text-sm font-medium mb-1.5 block">Proje Adı *</label>
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Proje Adı *</label>
                   <input
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
@@ -144,33 +156,33 @@ export default function ProjectsPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-1.5 block">Açıklama</label>
-                  <input
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">Açıklama</label>
+                  <textarea
                     value={newDesc}
                     onChange={(e) => setNewDesc(e.target.value)}
-                    placeholder="Opsiyonel açıklama"
-                    className="input-premium"
+                    placeholder="Projeniz hakkında kısa bir açıklama girin..."
+                    className="input-premium h-24 resize-none"
                   />
                 </div>
-                <div className="flex gap-3 pt-2">
+                <div className="flex gap-3.5 pt-3">
                   <button
                     onClick={createProject}
                     disabled={creating || !newName.trim()}
-                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 disabled:opacity-50 transition-colors"
+                    className="flex-1 btn-primary"
                   >
                     {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
                     Oluştur
                   </button>
                   <button
                     onClick={() => setShowCreate(false)}
-                    className="flex-1 rounded-xl border border-border px-4 py-2.5 text-sm font-medium hover:bg-secondary transition-colors"
+                    className="flex-1 btn-secondary"
                   >
                     İptal
                   </button>
                 </div>
               </div>
             </motion.div>
-          </>
+          </div>
         )}
       </AnimatePresence>
 

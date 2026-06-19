@@ -59,15 +59,19 @@ export default function LeadsPage() {
 
   const updateStatus = async (lead: Lead, status: string) => {
     if (!activeWorkspace) return
-    setUpdatingStatus(lead._id)
+    // Optimistic update
+    setLeads(prev => prev.map(l => l._id === lead._id ? { ...l, status: status as Lead["status"] } : l))
+    if (selectedLead?._id === lead._id) {
+      setSelectedLead(prev => prev ? { ...prev, status: status as Lead["status"] } : null)
+    }
     try {
       await api.put(`/workspaces/${activeWorkspace._id}/leads/${lead._id}/status`, { status })
       toast.success("Durum güncellendi")
-      fetchLeads()
-      if (selectedLead?._id === lead._id) setSelectedLead({ ...selectedLead, status: status as Lead["status"] })
     } catch (err: unknown) {
+      // Revert if error
+      fetchLeads()
       toast.error(err instanceof Error ? err.message : "Hata oluştu")
-    } finally { setUpdatingStatus(null) }
+    }
   }
 
   const addNote = async () => {
