@@ -7,10 +7,10 @@ import { api } from "@/lib/api"
 import { toast } from "sonner"
 import { useWorkspace } from "@/context/WorkspaceContext"
 import {
-  ArrowLeft, Save, Plus, Trash2, Settings, Shield,
-  Globe, Mail, FileText, Check, AlertTriangle, ChevronDown,
-  Layout, Eye, Loader2, Sparkles, Code
-} from "lucide-react"
+  IconArrowLeft, IconDeviceFloppy, IconPlus, IconTrash, IconSettings, IconShield,
+  IconGlobe, IconMail, IconFileText, IconCheck, IconAlertTriangle, IconChevronDown,
+  IconLayout, IconEye, IconLoader2, IconSparkles, IconCode, IconArrowUp, IconArrowDown
+} from "@tabler/icons-react"
 import Link from "next/link"
 
 interface Field {
@@ -110,6 +110,21 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
     setProject({ ...project, fields: updatedFields })
   }
 
+  const moveField = (index: number, direction: 'up' | 'down') => {
+    if (!project) return
+    const updatedFields = [...project.fields]
+    const targetIndex = direction === 'up' ? index - 1 : index + 1
+    if (targetIndex < 0 || targetIndex >= updatedFields.length) return
+    
+    // Swap fields
+    const temp = updatedFields[index]
+    updatedFields[index] = updatedFields[targetIndex]
+    updatedFields[targetIndex] = temp
+    
+    setProject({ ...project, fields: updatedFields })
+    toast.success("Sıralama güncellendi! Kaydetmeyi unutmayın.")
+  }
+
   const addDomain = () => {
     if (!project || !domainInput.trim()) return
     const domain = domainInput.trim().toLowerCase()
@@ -166,7 +181,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#7342E2]" />
+        <IconLoader2 className="w-8 h-8 animate-spin text-[#7342E2]" />
       </div>
     )
   }
@@ -174,15 +189,15 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
   if (!project) return null
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-foreground">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard/projects"
-            className="w-10 h-10 rounded-xl border border-border flex items-center justify-center hover:bg-secondary transition-colors"
+            className="w-10 h-10 rounded-xl border border-border flex items-center justify-center hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <IconArrowLeft className="w-5 h-5" />
           </Link>
           <div>
             <h1 className="text-3xl font-semibold tracking-tight">{project.name}</h1>
@@ -192,7 +207,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
         <div className="flex items-center gap-3">
           <Link
             href={`/dashboard/projects/${project._id}/submissions`}
-            className="rounded-xl border border-border px-4 py-2.5 text-sm font-semibold hover:bg-secondary transition-colors"
+            className="rounded-xl border border-border px-4 py-2.5 text-sm font-semibold hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
           >
             Gönderimleri Gör
           </Link>
@@ -201,7 +216,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
             disabled={saving}
             className="inline-flex items-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 disabled:opacity-50 transition-colors shadow-sm"
           >
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            {saving ? <IconLoader2 className="w-4 h-4 animate-spin" /> : <IconDeviceFloppy className="w-4 h-4" />}
             Kaydet
           </button>
         </div>
@@ -215,7 +230,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
             activeTab === "fields" ? "border-[#7342E2] text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
           }`}
         >
-          <Layout className="w-4 h-4" />
+          <IconLayout className="w-4 h-4" />
           Form Alanları
         </button>
         <button
@@ -224,7 +239,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
             activeTab === "settings" ? "border-[#7342E2] text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
           }`}
         >
-          <Settings className="w-4 h-4" />
+          <IconSettings className="w-4 h-4" />
           Form Ayarları
         </button>
         <button
@@ -233,7 +248,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
             activeTab === "security" ? "border-[#7342E2] text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
           }`}
         >
-          <Shield className="w-4 h-4" />
+          <IconShield className="w-4 h-4" />
           Spam & Güvenlik
         </button>
       </div>
@@ -262,7 +277,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                       <select
                         value={newFieldType}
                         onChange={(e) => setNewFieldType(e.target.value as Field["type"])}
-                        className="bg-background border border-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#7342E2]"
+                        className="bg-background text-foreground border border-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#7342E2]"
                       >
                         <option value="text">Metin (Single Line)</option>
                         <option value="email">E-posta</option>
@@ -278,7 +293,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                         onClick={addField}
                         className="inline-flex items-center gap-1 bg-[#7342E2] hover:bg-[#7342E2]/90 text-white rounded-xl px-3 py-2 text-sm font-medium transition-colors"
                       >
-                        <Plus className="w-4 h-4" />
+                        <IconPlus className="w-4 h-4" />
                         Ekle
                       </button>
                     </div>
@@ -286,8 +301,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
 
                   {project.fields.length === 0 ? (
                     <div className="text-center py-12 border border-dashed border-border rounded-2xl bg-muted/20">
-                      <Layout className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-                      <p className="font-medium text-sm">Henüz form alanı eklenmedi</p>
+                      <IconLayout className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                      <p className="font-medium text-sm text-foreground">Henüz form alanı eklenmedi</p>
                       <p className="text-xs text-muted-foreground mt-1">Sağ üstten alan seçerek eklemeye başlayın.</p>
                     </div>
                   ) : (
@@ -303,7 +318,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                             {/* Type (Disabled) */}
                             <div>
                               <span className="text-xs text-muted-foreground block mb-1">Tip</span>
-                              <div className="text-sm font-medium px-3 py-2 bg-secondary/30 border border-border rounded-lg capitalize">
+                              <div className="text-sm font-medium px-3 py-2 bg-secondary/35 border border-border rounded-lg capitalize text-foreground">
                                 {field.type}
                               </div>
                             </div>
@@ -313,7 +328,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                               <input
                                 value={field.label}
                                 onChange={(e) => updateField(index, "label", e.target.value)}
-                                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#7342E2]"
+                                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-[#7342E2]"
                               />
                             </div>
                             {/* Name (for key) */}
@@ -322,29 +337,50 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                               <input
                                 value={field.name}
                                 onChange={(e) => updateField(index, "name", e.target.value.replace(/\s+/g, "_"))}
-                                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm font-mono focus:outline-none focus:ring-1 focus:ring-[#7342E2]"
+                                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-[#7342E2]"
                               />
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-4 shrink-0 justify-between md:justify-end pt-3 md:pt-0 border-t md:border-t-0 border-border">
+                          <div className="flex items-center gap-2 shrink-0 justify-between md:justify-end pt-3 md:pt-0 border-t md:border-t-0 border-border">
                             {/* Required */}
-                            <label className="flex items-center gap-2 cursor-pointer">
+                            <label className="flex items-center gap-2 cursor-pointer mr-2">
                               <input
                                 type="checkbox"
                                 checked={field.required}
                                 onChange={(e) => updateField(index, "required", e.target.checked)}
                                 className="rounded border-border text-[#7342E2] focus:ring-[#7342E2] w-4 h-4"
                               />
-                              <span className="text-xs font-medium">Zorunlu</span>
+                              <span className="text-xs font-semibold text-foreground">Zorunlu</span>
                             </label>
+
+                            {/* Move Up */}
+                            <button
+                              onClick={() => moveField(index, "up")}
+                              disabled={index === 0}
+                              className="p-1.5 text-muted-foreground hover:text-[#7342E2] hover:bg-secondary/40 rounded-lg transition-colors disabled:opacity-30"
+                              title="Yukarı Taşı"
+                            >
+                              <IconArrowUp className="w-4 h-4" />
+                            </button>
+
+                            {/* Move Down */}
+                            <button
+                              onClick={() => moveField(index, "down")}
+                              disabled={index === project.fields.length - 1}
+                              className="p-1.5 text-muted-foreground hover:text-[#7342E2] hover:bg-secondary/40 rounded-lg transition-colors disabled:opacity-30"
+                              title="Aşağı Taşı"
+                            >
+                              <IconArrowDown className="w-4 h-4" />
+                            </button>
 
                             {/* Delete */}
                             <button
                               onClick={() => removeField(index)}
-                              className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                              className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                              title="Sil"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <IconTrash className="w-4 h-4" />
                             </button>
                           </div>
                         </motion.div>
@@ -373,7 +409,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                         ...project,
                         settings: { ...project.settings, successMessage: e.target.value }
                       })}
-                      className="input-premium h-20 resize-none"
+                      className="input-premium h-20 resize-none text-foreground"
                     />
                   </div>
                   <div>
@@ -385,7 +421,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                         settings: { ...project.settings, redirectUrl: e.target.value || undefined }
                       })}
                       placeholder="https://siteniz.com/tesekkurler"
-                      className="input-premium"
+                      className="input-premium text-foreground"
                     />
                   </div>
                 </div>
@@ -397,13 +433,13 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                     <input
                       value={project.name}
                       onChange={(e) => setProject({ ...project, name: e.target.value })}
-                      className="input-premium"
+                      className="input-premium text-foreground"
                     />
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-xl border border-border bg-secondary/10">
+                  <div className="flex items-center justify-between p-3 rounded-xl border border-border bg-secondary/10 text-foreground">
                     <div>
                       <span className="text-sm font-semibold block">Proje Durumu</span>
-                      <span className="text-xs text-muted-foreground">Aktif formlar dışarıdan gönderim alabilir.</span>
+                      <span className="text-xs text-muted-foreground font-medium">Aktif formlar dışarıdan gönderim alabilir.</span>
                     </div>
                     <button
                       onClick={() => setProject({ ...project, isActive: !project.isActive })}
@@ -426,12 +462,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
               >
                 {/* Security options */}
                 <div className="card-premium p-6 space-y-4">
-                  <h3 className="font-semibold text-lg mb-2">Spam Koruması</h3>
+                  <h3 className="font-semibold text-lg mb-2 text-foreground">Spam Koruması</h3>
                   
-                  <div className="flex items-center justify-between p-4 rounded-xl border border-border">
+                  <div className="flex items-center justify-between p-4 rounded-xl border border-border text-foreground">
                     <div>
                       <span className="text-sm font-semibold block">AI Spam Filtresi</span>
-                      <span className="text-xs text-muted-foreground">Akıllı spam skoru hesaplama algoritmasını aktif et.</span>
+                      <span className="text-xs text-muted-foreground font-medium">Akıllı spam skoru hesaplama algoritmasını aktif et.</span>
                     </div>
                     <button
                       onClick={() => setProject({
@@ -444,10 +480,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                     </button>
                   </div>
 
-                  <div className="flex items-center justify-between p-4 rounded-xl border border-border">
+                  <div className="flex items-center justify-between p-4 rounded-xl border border-border text-foreground">
                     <div>
                       <span className="text-sm font-semibold block">Honeypot Alanı</span>
-                      <span className="text-xs text-muted-foreground">Botlar için görünmez tuzak alanlar ekleyerek tespiti kolaylaştırır.</span>
+                      <span className="text-xs text-muted-foreground font-medium">Botlar için görünmez tuzak alanlar ekleyerek tespiti kolaylaştırır.</span>
                     </div>
                     <button
                       onClick={() => setProject({
@@ -464,8 +500,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                 {/* Whitelist domains */}
                 <div className="card-premium p-6 space-y-4">
                   <div className="flex items-center gap-2">
-                    <Globe className="w-5 h-5 text-[#7342E2]" />
-                    <h3 className="font-semibold text-lg">Alan Adı Beyaz Listesi (CORS)</h3>
+                    <IconGlobe className="w-5 h-5 text-[#7342E2]" />
+                    <h3 className="font-semibold text-lg text-foreground">Alan Adı Beyaz Listesi (CORS)</h3>
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Sadece aşağıdaki alan adlarından gelen form istekleri kabul edilir. Boş bırakırsanız, her adresten gönderim yapılabilir.
@@ -475,7 +511,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
                       value={domainInput}
                       onChange={(e) => setDomainInput(e.target.value)}
                       placeholder="örn. siteniz.com"
-                      className="input-premium py-2"
+                      className="input-premium py-2 text-foreground"
                       onKeyDown={(e) => e.key === "Enter" && addDomain()}
                     />
                     <button
@@ -505,7 +541,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
 
         {/* Side Info Panel */}
         <div className="space-y-6">
-          <div className="card-premium p-6 space-y-4">
+          <div className="card-premium p-6 space-y-4 text-foreground">
             <h3 className="font-semibold text-lg">Hızlı Başlangıç</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
               Formunuza alan ekledikten sonra, entegrasyonu tamamlamak için embed kodunu veya endpoint'i kopyalayın.
@@ -513,9 +549,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
             <div className="pt-2 flex flex-col gap-2">
               <Link
                 href={`/dashboard/projects/${project._id}/embed`}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-secondary px-4 py-2.5 text-sm font-semibold hover:bg-secondary/80 transition-all border border-border"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-secondary px-4 py-2.5 text-sm font-semibold hover:bg-secondary/80 transition-all border border-border text-foreground"
               >
-                <Code className="w-4 h-4 text-[#7342E2]" />
+                <IconCode className="w-4 h-4 text-[#7342E2]" />
                 Embed Kodu Al
               </Link>
             </div>
@@ -523,7 +559,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ projec
 
           <div className="card-premium p-6 bg-yellow-500/5 border-yellow-500/20 text-yellow-600 dark:text-yellow-500 space-y-2">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 shrink-0" />
+              <IconAlertTriangle className="w-5 h-5 shrink-0" />
               <h4 className="font-semibold text-sm">Kaydetmeyi Unutmayın</h4>
             </div>
             <p className="text-xs leading-relaxed opacity-90">

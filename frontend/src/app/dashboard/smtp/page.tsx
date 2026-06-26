@@ -6,9 +6,9 @@ import { api } from "@/lib/api"
 import { toast } from "sonner"
 import { useWorkspace } from "@/context/WorkspaceContext"
 import {
-  MailCheck, Plus, Star, Trash2, TestTube, Loader2,
-  Check, X, Settings2
-} from "lucide-react"
+  IconMailCheck, IconPlus, IconStar, IconTrash, IconFlask, IconLoader2,
+  IconCheck, IconX, IconSettings
+} from "@tabler/icons-react"
 
 interface SmtpProvider {
   _id: string
@@ -124,9 +124,9 @@ export default function SmtpPage() {
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 transition-colors"
+          className="inline-flex items-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 transition-colors shadow-sm"
         >
-          <Plus className="h-4 w-4" /> SMTP Ekle
+          <IconPlus className="h-4 w-4" /> SMTP Ekle
         </button>
       </motion.div>
 
@@ -142,13 +142,13 @@ export default function SmtpPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between border-b border-border/60 pb-4 mb-6">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <MailCheck className="w-5.5 h-5.5 text-[#7342E2]" />
+                <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                  <IconMailCheck className="w-5.5 h-5.5 text-[#7342E2]" />
                   SMTP Provider Ekle
                 </h2>
                 <button
                   onClick={() => setShowForm(false)}
-                  className="text-muted-foreground hover:text-white transition-colors text-lg font-bold"
+                  className="text-muted-foreground hover:text-foreground transition-colors text-lg font-bold"
                 >
                   ×
                 </button>
@@ -163,7 +163,7 @@ export default function SmtpPage() {
                       <button
                         key={p.label}
                         onClick={() => setForm(f => ({ ...f, host: p.host, port: p.port, secure: p.secure, name: p.label }))}
-                        className="px-3 py-1.5 text-xs rounded-xl border border-border bg-secondary/40 hover:bg-[#7342E2]/10 hover:border-[#7342E2]/50 transition-colors font-semibold text-white"
+                        className="px-3 py-1.5 text-xs rounded-xl border border-border bg-secondary/40 hover:bg-[#7342E2]/10 hover:border-[#7342E2]/50 transition-colors font-semibold text-foreground"
                       >
                         {p.label}
                       </button>
@@ -244,7 +244,7 @@ export default function SmtpPage() {
                       onChange={(e) => setForm(f => ({ ...f, secure: e.target.checked }))}
                       className="rounded border-border text-[#7342E2] focus:ring-[#7342E2] w-4.5 h-4.5"
                     />
-                    <label htmlFor="secure" className="text-sm font-semibold text-white select-none">SSL/TLS (port 465)</label>
+                    <label htmlFor="secure" className="text-sm font-semibold text-foreground select-none">SSL/TLS (port 465)</label>
                   </div>
                 </div>
 
@@ -252,9 +252,9 @@ export default function SmtpPage() {
                   <button
                     onClick={saveProvider}
                     disabled={saving || !form.name || !form.host || !form.username || !form.password}
-                    className="flex-1 btn-primary"
+                    className="flex-1 btn-primary text-white"
                   >
-                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                    {saving ? <IconLoader2 className="w-4 h-4 animate-spin" /> : <IconCheck className="w-4 h-4" />}
                     Kaydet
                   </button>
                   <button
@@ -272,10 +272,10 @@ export default function SmtpPage() {
 
       {/* Provider List */}
       {loading ? (
-        <div className="card-premium p-8 text-center"><Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground" /></div>
+        <div className="card-premium p-8 text-center"><IconLoader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground" /></div>
       ) : providers.length === 0 ? (
         <div className="card-premium p-12 text-center">
-          <MailCheck className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
+          <IconMailCheck className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
           <p className="font-medium">Henüz SMTP provider yok</p>
           <p className="text-sm text-muted-foreground mt-1">Mail gönderebilmek için bir SMTP sağlayıcı ekleyin</p>
         </div>
@@ -285,14 +285,14 @@ export default function SmtpPage() {
             <motion.div key={p._id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
               className="card-premium flex items-center justify-between gap-4">
               <div className="flex items-center gap-4 min-w-0">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${p.isPrimary ? "bg-[#7342E2] text-white" : "bg-secondary"}`}>
-                  <MailCheck className="w-5 h-5" />
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${p.isPrimary ? "bg-[#7342E2]" : "bg-secondary"}`}>
+                  <IconMailCheck className={`w-5 h-5 ${p.isPrimary ? "text-white" : "text-muted-foreground"}`} />
                 </div>
-                <div className="min-w-0">
+                <div className="min-w-0 text-foreground">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold truncate">{p.name}</span>
                     {p.isPrimary && <span className="text-xs bg-[#7342E2]/10 text-[#7342E2] px-2 py-0.5 rounded-full font-medium">Varsayılan</span>}
-                    {p.isVerified && <span className="text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 px-2 py-0.5 rounded-full font-medium flex items-center gap-1"><Check className="w-3 h-3" />Doğrulandı</span>}
+                    {p.isVerified && <span className="text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 px-2 py-0.5 rounded-full font-medium flex items-center gap-1"><IconCheck className="w-3 h-3" />Doğrulandı</span>}
                   </div>
                   <p className="text-sm text-muted-foreground">{p.username} · {p.host}:{p.port}</p>
                   {p.lastTestResult && <p className="text-xs text-muted-foreground mt-0.5">Son test: {p.lastTestResult}</p>}
@@ -302,16 +302,16 @@ export default function SmtpPage() {
                 {!p.isPrimary && (
                   <button onClick={() => setDefault(p._id)} title="Varsayılan yap"
                     className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-[#7342E2]">
-                    <Star className="w-4 h-4" />
+                    <IconStar className="w-4 h-4" />
                   </button>
                 )}
                 <button onClick={() => testProvider(p._id)} disabled={testing === p._id}
                   className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-emerald-600">
-                  {testing === p._id ? <Loader2 className="w-4 h-4 animate-spin" /> : <TestTube className="w-4 h-4" />}
+                  {testing === p._id ? <IconLoader2 className="w-4 h-4 animate-spin" /> : <IconFlask className="w-4 h-4" />}
                 </button>
                 <button onClick={() => deleteProvider(p._id, p.name)}
                   className="p-2 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors text-muted-foreground">
-                  <Trash2 className="w-4 h-4" />
+                  <IconTrash className="w-4 h-4" />
                 </button>
               </div>
             </motion.div>

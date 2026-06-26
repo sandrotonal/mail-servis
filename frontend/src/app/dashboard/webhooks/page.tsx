@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from "framer-motion"
 import { api } from "@/lib/api"
 import { toast } from "sonner"
 import { useWorkspace } from "@/context/WorkspaceContext"
-import { Webhook, Plus, Trash2, TestTube, Loader2, Check, Zap, ToggleLeft, ToggleRight } from "lucide-react"
+import {
+  IconWebhook, IconPlus, IconTrash, IconFlask, IconLoader2, IconCheck, IconBolt, IconToggleLeft, IconToggleRight
+} from "@tabler/icons-react"
 
 const WEBHOOK_EVENTS = [
   { value: "message.received", label: "Mesaj Alındı" },
@@ -100,8 +102,8 @@ export default function WebhooksPage() {
           <p className="text-muted-foreground mt-1">Olaylar için HTTP bildirimler</p>
         </div>
         <button onClick={() => setShowForm(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 transition-colors">
-          <Plus className="h-4 w-4" /> Webhook Ekle
+          className="inline-flex items-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 transition-colors shadow-sm">
+          <IconPlus className="h-4 w-4" /> Webhook Ekle
         </button>
       </motion.div>
 
@@ -116,13 +118,13 @@ export default function WebhooksPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between border-b border-border/60 pb-4 mb-6">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <Webhook className="w-5.5 h-5.5 text-[#7342E2]" />
+                <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                  <IconWebhook className="w-5.5 h-5.5 text-[#7342E2]" />
                   Webhook Ekle
                 </h2>
                 <button
                   onClick={() => setShowForm(false)}
-                  className="text-muted-foreground hover:text-white transition-colors text-lg font-bold"
+                  className="text-muted-foreground hover:text-foreground transition-colors text-lg font-bold"
                 >
                   ×
                 </button>
@@ -160,9 +162,9 @@ export default function WebhooksPage() {
                               : "border-border/80 group-hover:border-[#7342E2]/50"
                           }`}
                         >
-                          {form.events.includes(ev.value) && <Check className="w-3.5 h-3.5 text-white" />}
+                          {form.events.includes(ev.value) && <IconCheck className="w-3.5 h-3.5 text-white" />}
                         </div>
-                        <span className="text-sm font-semibold text-muted-foreground group-hover:text-white transition-colors">{ev.label}</span>
+                        <span className="text-sm font-semibold text-muted-foreground group-hover:text-foreground transition-colors">{ev.label}</span>
                       </label>
                     ))}
                   </div>
@@ -171,9 +173,9 @@ export default function WebhooksPage() {
                   <button
                     onClick={saveWebhook}
                     disabled={saving || !form.name || !form.url || form.events.length === 0}
-                    className="flex-1 btn-primary"
+                    className="flex-1 btn-primary text-white"
                   >
-                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
+                    {saving ? <IconLoader2 className="w-4 h-4 animate-spin" /> : <IconBolt className="w-4 h-4" />}
                     Kaydet
                   </button>
                   <button
@@ -190,10 +192,10 @@ export default function WebhooksPage() {
       </AnimatePresence>
 
       {loading ? (
-        <div className="card-premium p-8 text-center"><Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground" /></div>
+        <div className="card-premium p-8 text-center"><IconLoader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground" /></div>
       ) : webhooks.length === 0 ? (
         <div className="card-premium p-12 text-center">
-          <Webhook className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
+          <IconWebhook className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
           <p className="font-medium">Henüz webhook yok</p>
           <p className="text-sm text-muted-foreground mt-1">Olaylar gerçekleştiğinde HTTP bildirim alın</p>
         </div>
@@ -204,7 +206,7 @@ export default function WebhooksPage() {
               className="card-premium flex items-center justify-between gap-4">
               <div className="min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-semibold">{wh.name}</span>
+                  <span className="font-semibold text-foreground">{wh.name}</span>
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${wh.isActive ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" : "bg-muted text-muted-foreground"}`}>
                     {wh.isActive ? "Aktif" : "Pasif"}
                   </span>
@@ -217,18 +219,18 @@ export default function WebhooksPage() {
                 <p className="text-sm text-muted-foreground truncate">{wh.url}</p>
                 <div className="flex flex-wrap gap-1 mt-2">
                   {wh.events.map(ev => (
-                    <span key={ev} className="text-xs bg-secondary px-2 py-0.5 rounded-full">{ev}</span>
+                    <span key={ev} className="text-xs bg-secondary px-2 py-0.5 rounded-full text-foreground">{ev}</span>
                   ))}
                 </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <button onClick={() => testWebhook(wh._id)} disabled={testing === wh._id} title="Test et"
                   className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-emerald-600">
-                  {testing === wh._id ? <Loader2 className="w-4 h-4 animate-spin" /> : <TestTube className="w-4 h-4" />}
+                  {testing === wh._id ? <IconLoader2 className="w-4 h-4 animate-spin" /> : <IconFlask className="w-4 h-4" />}
                 </button>
                 <button onClick={() => deleteWebhook(wh._id, wh.name)} title="Sil"
                   className="p-2 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors text-muted-foreground">
-                  <Trash2 className="w-4 h-4" />
+                  <IconTrash className="w-4 h-4" />
                 </button>
               </div>
             </motion.div>

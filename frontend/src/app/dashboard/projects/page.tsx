@@ -7,9 +7,9 @@ import { api } from "@/lib/api"
 import { toast } from "sonner"
 import { useWorkspace } from "@/context/WorkspaceContext"
 import {
-  Plus, Mail, Copy, ExternalLink, Settings, Loader2,
-  MoreVertical, Trash2, ToggleLeft, ToggleRight, Send,
-} from "lucide-react"
+  IconPlus, IconMail, IconCopy, IconExternalLink, IconSettings, IconLoader2,
+  IconTrash, IconToggleLeft, IconToggleRight, IconSend, IconX
+} from "@tabler/icons-react"
 
 interface Project {
   _id: string
@@ -114,7 +114,7 @@ export default function ProjectsPage() {
           onClick={() => setShowCreate(true)}
           className="inline-flex items-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 transition-colors shadow-sm"
         >
-          <Plus className="h-4 w-4" />
+          <IconPlus className="h-4 w-4" />
           Yeni Proje
         </button>
       </motion.div>
@@ -131,13 +131,13 @@ export default function ProjectsPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between border-b border-border/60 pb-4 mb-6">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <Mail className="w-5.5 h-5.5 text-[#7342E2]" />
+                <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                  <IconMail className="w-5.5 h-5.5 text-[#7342E2]" />
                   Yeni Proje Oluştur
                 </h2>
                 <button
                   onClick={() => setShowCreate(false)}
-                  className="text-muted-foreground hover:text-white transition-colors text-lg font-bold"
+                  className="text-muted-foreground hover:text-foreground transition-colors text-lg font-bold"
                 >
                   ×
                 </button>
@@ -168,9 +168,9 @@ export default function ProjectsPage() {
                   <button
                     onClick={createProject}
                     disabled={creating || !newName.trim()}
-                    className="flex-1 btn-primary"
+                    className="flex-1 btn-primary text-white"
                   >
-                    {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                    {creating ? <IconLoader2 className="w-4 h-4 animate-spin" /> : <IconPlus className="w-4 h-4" />}
                     Oluştur
                   </button>
                   <button
@@ -203,7 +203,7 @@ export default function ProjectsPage() {
           className="flex flex-col items-center justify-center py-20 text-center"
         >
           <div className="w-16 h-16 rounded-2xl bg-[#7342E2]/10 flex items-center justify-center mb-4">
-            <Mail className="w-8 h-8 text-[#7342E2]" />
+            <IconMail className="w-8 h-8 text-[#7342E2]" />
           </div>
           <h3 className="text-lg font-semibold mb-2">Henüz proje yok</h3>
           <p className="text-muted-foreground text-sm mb-6 max-w-sm">
@@ -213,7 +213,7 @@ export default function ProjectsPage() {
             onClick={() => setShowCreate(true)}
             className="inline-flex items-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 transition-colors"
           >
-            <Plus className="h-4 w-4" />
+            <IconPlus className="h-4 w-4" />
             İlk Projeyi Oluştur
           </button>
         </motion.div>
@@ -229,14 +229,14 @@ export default function ProjectsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.07 }}
               whileHover={{ y: -4 }}
-              className="card-premium group relative"
+              className="card-premium group relative text-foreground"
             >
               {/* Status dot */}
               <div className={`absolute top-4 right-4 w-2.5 h-2.5 rounded-full ${project.isActive ? "bg-emerald-500" : "bg-muted-foreground"}`} />
 
               <div className="flex items-start gap-3 mb-4 pr-6">
                 <div className="w-10 h-10 rounded-xl bg-[#7342E2]/10 flex items-center justify-center shrink-0">
-                  <Mail className="w-5 h-5 text-[#7342E2]" />
+                  <IconMail className="w-5 h-5 text-[#7342E2]" />
                 </div>
                 <div className="min-w-0">
                   <h3 className="font-semibold truncate">{project.name}</h3>
@@ -247,7 +247,7 @@ export default function ProjectsPage() {
               </div>
 
               <div className="flex items-center gap-3 mb-4 text-sm text-muted-foreground">
-                <Send className="w-4 h-4" />
+                <IconSend className="w-4 h-4" />
                 <span>{project.totalSubmissions} gönderim</span>
               </div>
 
@@ -256,21 +256,21 @@ export default function ProjectsPage() {
                   onClick={() => copyEndpoint(project.projectId)}
                   className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-border py-2 text-xs font-medium hover:bg-secondary transition-colors"
                 >
-                  <Copy className="h-3.5 w-3.5" />
+                  <IconCopy className="h-3.5 w-3.5" />
                   Endpoint
                 </button>
                 <Link
                   href={`/dashboard/projects/${project._id}/embed`}
                   className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-border py-2 text-xs font-medium hover:bg-secondary transition-colors"
                 >
-                  <ExternalLink className="h-3.5 w-3.5" />
+                  <IconExternalLink className="h-3.5 w-3.5" />
                   Embed
                 </Link>
                 <Link
                   href={`/dashboard/projects/${project._id}`}
                   className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-[#7342E2]/10 text-[#7342E2] py-2 text-xs font-medium hover:bg-[#7342E2]/20 transition-colors"
                 >
-                  <Settings className="h-3.5 w-3.5" />
+                  <IconSettings className="h-3.5 w-3.5" />
                   Ayarlar
                 </Link>
               </div>
@@ -283,16 +283,16 @@ export default function ProjectsPage() {
                   title={project.isActive ? "Devre dışı bırak" : "Aktif et"}
                 >
                   {project.isActive
-                    ? <ToggleRight className="w-4 h-4 text-emerald-500" />
-                    : <ToggleLeft className="w-4 h-4 text-muted-foreground" />
+                    ? <IconToggleRight className="w-4 h-4 text-emerald-500" />
+                    : <IconToggleLeft className="w-4 h-4 text-muted-foreground" />
                   }
                 </button>
                 <button
                   onClick={() => deleteProject(project)}
-                  className="p-1.5 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors"
+                  className="p-1.5 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors text-muted-foreground"
                   title="Sil"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <IconTrash className="w-4 h-4" />
                 </button>
               </div>
             </motion.div>

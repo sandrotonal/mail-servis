@@ -5,7 +5,10 @@ import { motion, AnimatePresence } from "framer-motion"
 import { api } from "@/lib/api"
 import { toast } from "sonner"
 import { useWorkspace } from "@/context/WorkspaceContext"
-import { Globe, Plus, CheckCircle, XCircle, Clock, Trash2, RefreshCw, Loader2, Copy, ChevronDown } from "lucide-react"
+import {
+  IconGlobe, IconPlus, IconCircleCheck, IconCircleX, IconClock,
+  IconTrash, IconRefresh, IconLoader2, IconCopy, IconChevronDown
+} from "@tabler/icons-react"
 
 interface DomainDoc {
   _id: string
@@ -101,9 +104,9 @@ export default function DomainsPage() {
   const copyText = (text: string) => { navigator.clipboard.writeText(text); toast.success("Kopyalandı!") }
 
   const statusIcon = (status: string) => {
-    if (status === "verified") return <CheckCircle className="w-5 h-5 text-emerald-500" />
-    if (status === "failed") return <XCircle className="w-5 h-5 text-red-500" />
-    return <Clock className="w-5 h-5 text-yellow-500" />
+    if (status === "verified") return <IconCircleCheck className="w-5 h-5 text-emerald-500" />
+    if (status === "failed") return <IconCircleX className="w-5 h-5 text-red-500" />
+    return <IconClock className="w-5 h-5 text-yellow-500" />
   }
 
   const statusLabel = (status: string) => {
@@ -114,6 +117,7 @@ export default function DomainsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -121,8 +125,8 @@ export default function DomainsPage() {
           <p className="text-muted-foreground mt-1">SPF, DKIM ve DMARC doğrulaması</p>
         </div>
         <button onClick={() => setShowAdd(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 transition-colors">
-          <Plus className="h-4 w-4" /> Domain Ekle
+          className="inline-flex items-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 transition-colors shadow-sm">
+          <IconPlus className="h-4 w-4" /> Domain Ekle
         </button>
       </motion.div>
 
@@ -138,13 +142,13 @@ export default function DomainsPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between border-b border-border/60 pb-4 mb-6">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <Globe className="w-5.5 h-5.5 text-[#7342E2]" />
+                <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                  <IconGlobe className="w-5.5 h-5.5 text-[#7342E2]" />
                   Domain Ekle
                 </h2>
                 <button
                   onClick={() => setShowAdd(false)}
-                  className="text-muted-foreground hover:text-white transition-colors text-lg font-bold"
+                  className="text-muted-foreground hover:text-foreground transition-colors text-lg font-bold"
                 >
                   ×
                 </button>
@@ -168,7 +172,7 @@ export default function DomainsPage() {
                     disabled={adding || !newDomain.trim()}
                     className="flex-1 btn-primary"
                   >
-                    {adding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Globe className="w-4 h-4" />}
+                    {adding ? <IconLoader2 className="w-4 h-4 animate-spin" /> : <IconGlobe className="w-4 h-4" />}
                     Ekle
                   </button>
                   <button
@@ -202,11 +206,11 @@ export default function DomainsPage() {
               <div key={rec.label} className="mb-3 last:mb-0">
                 <p className="text-xs font-semibold text-muted-foreground mb-1">{rec.label} ({rec.type})</p>
                 <div className="flex gap-2">
-                  <div className="flex-1 bg-background border border-border rounded-lg p-2 text-xs font-mono overflow-x-auto">
+                  <div className="flex-1 bg-background border border-border rounded-lg p-2 text-xs font-mono overflow-x-auto text-foreground">
                     <span className="text-muted-foreground">@{rec.name} → </span>{rec.value}
                   </div>
-                  <button onClick={() => copyText(rec.value)} className="p-2 rounded-lg hover:bg-secondary transition-colors shrink-0">
-                    <Copy className="w-3.5 h-3.5" />
+                  <button onClick={() => copyText(rec.value)} className="p-2 rounded-lg hover:bg-secondary transition-colors shrink-0 text-muted-foreground">
+                    <IconCopy className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -217,10 +221,10 @@ export default function DomainsPage() {
 
       {/* Domain List */}
       {loading ? (
-        <div className="card-premium p-8 text-center"><Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground" /></div>
+        <div className="card-premium p-8 text-center"><IconLoader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground" /></div>
       ) : domains.length === 0 ? (
         <div className="card-premium p-12 text-center">
-          <Globe className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
+          <IconGlobe className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
           <p className="font-medium">Henüz domain yok</p>
           <p className="text-sm text-muted-foreground mt-1">Email deliverability için domain doğrulaması yapın</p>
         </div>
@@ -235,7 +239,7 @@ export default function DomainsPage() {
                   <div className="flex items-center gap-3 min-w-0">
                     {statusIcon(d.verificationStatus)}
                     <div className="min-w-0">
-                      <p className="font-semibold">{d.domain}</p>
+                      <p className="font-semibold text-foreground">{d.domain}</p>
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-0.5 ${cls}`}>{label}</span>
                     </div>
                   </div>
@@ -243,17 +247,17 @@ export default function DomainsPage() {
                     {d.verificationStatus !== "verified" && (
                       <button onClick={() => verifyDomain(d._id)} disabled={verifying === d._id}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-[#7342E2]/10 text-[#7342E2] hover:bg-[#7342E2]/20 transition-colors disabled:opacity-50">
-                        {verifying === d._id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                        {verifying === d._id ? <IconLoader2 className="w-3.5 h-3.5 animate-spin" /> : <IconRefresh className="w-3.5 h-3.5" />}
                         Doğrula
                       </button>
                     )}
                     <button onClick={() => setExpandedId(expandedId === d._id ? null : d._id)}
                       className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground">
-                      <ChevronDown className={`w-4 h-4 transition-transform ${expandedId === d._id ? "rotate-180" : ""}`} />
+                      <IconChevronDown className={`w-4 h-4 transition-transform ${expandedId === d._id ? "rotate-180" : ""}`} />
                     </button>
                     <button onClick={() => deleteDomain(d._id, d.domain)}
                       className="p-2 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors text-muted-foreground">
-                      <Trash2 className="w-4 h-4" />
+                      <IconTrash className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -271,8 +275,8 @@ export default function DomainsPage() {
                         ].map(rec => (
                           <div key={rec.label} className="bg-secondary/50 rounded-lg p-3">
                             <div className="flex items-center gap-1.5 mb-2">
-                              {rec.verified ? <CheckCircle className="w-4 h-4 text-emerald-500" /> : <Clock className="w-4 h-4 text-yellow-500" />}
-                              <span className="text-xs font-semibold">{rec.label}</span>
+                              {rec.verified ? <IconCircleCheck className="w-4 h-4 text-emerald-500" /> : <IconClock className="w-4 h-4 text-yellow-500" />}
+                              <span className="text-xs font-semibold text-foreground">{rec.label}</span>
                             </div>
                             <p className="text-xs font-mono text-muted-foreground break-all leading-relaxed">{rec.value}</p>
                           </div>

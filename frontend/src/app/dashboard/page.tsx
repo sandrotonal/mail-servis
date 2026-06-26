@@ -126,7 +126,7 @@ export default function DashboardPage() {
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border/40 pb-6"
       >
         <div>
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground via-foreground to-foreground/60 bg-clip-text text-transparent">
             Dashboard
           </h1>
           <p className="text-muted-foreground mt-1 text-sm font-medium">
@@ -166,7 +166,7 @@ export default function DashboardPage() {
               </div>
               <IconArrowUpRight className="w-4.5 h-4.5 text-muted-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
-            <p className="text-3xl font-bold tracking-tight text-white">{formatNumber(card.value)}</p>
+            <p className="text-3xl font-bold tracking-tight text-foreground">{formatNumber(card.value)}</p>
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-1">{card.label}</p>
           </motion.div>
         ))}
@@ -183,7 +183,7 @@ export default function DashboardPage() {
         >
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="font-bold text-lg text-white">Günlük Gönderimler</h3>
+              <h3 className="font-bold text-lg text-foreground">Günlük Gönderimler</h3>
               <p className="text-xs text-muted-foreground">Son 14 gündeki mesaj ve spam dağılımı</p>
             </div>
             <IconTrendingUp className="w-5 h-5 text-muted-foreground" />
@@ -234,7 +234,7 @@ export default function DashboardPage() {
         >
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="font-bold text-lg text-white">Lead Durumları</h3>
+              <h3 className="font-bold text-lg text-foreground">Lead Durumları</h3>
               <p className="text-xs text-muted-foreground">Müşteri potansiyeli analizi</p>
             </div>
             <IconUsers className="w-5 h-5 text-muted-foreground" />
@@ -273,7 +273,7 @@ export default function DashboardPage() {
         {/* Recent Submissions */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
               <IconMail className="w-5.5 h-5.5 text-[#7342E2]" />
               Son Gelen Mesajlar
             </h3>
@@ -307,7 +307,7 @@ export default function DashboardPage() {
                         .slice(0, 35) + "..."
                       return (
                         <tr key={sub._id} className="hover:bg-secondary/20 transition-colors">
-                          <td className="px-5 py-3.5 font-semibold text-white">
+                          <td className="px-5 py-3.5 font-semibold text-foreground">
                             {sub.project?.name || "Bilinmeyen Proje"}
                           </td>
                           <td className="px-5 py-3.5 text-muted-foreground font-medium">{email}</td>
@@ -329,7 +329,7 @@ export default function DashboardPage() {
 
         {/* Quick Actions Hub */}
         <div className="space-y-4">
-          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+          <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
             <IconKey className="w-5.5 h-5.5 text-[#7342E2]" />
             Hızlı Kısayollar
           </h3>
@@ -345,7 +345,7 @@ export default function DashboardPage() {
                     <act.icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="font-semibold text-sm text-white group-hover:text-[#a78bfa] transition-colors">{act.label}</p>
+                    <p className="font-semibold text-sm text-foreground group-hover:text-[#a78bfa] transition-colors">{act.label}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{act.desc}</p>
                   </div>
                 </div>
@@ -366,7 +366,7 @@ export default function DashboardPage() {
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-bold text-white text-base">Aylık Kullanım Limiti</h3>
+              <h3 className="font-bold text-foreground text-base">Aylık Kullanım Limiti</h3>
               <p className="text-xs text-muted-foreground mt-0.5">Çalışma alanı kota tüketim tablosu</p>
             </div>
             <span className="text-xs bg-[#7342E2]/15 text-[#a78bfa] border border-[#7342E2]/25 px-3 py-1 rounded-full font-semibold capitalize">
@@ -375,7 +375,7 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
             <span className="font-medium">
-              <strong className="text-white">{activeWorkspace.monthlyUsage}</strong> / {activeWorkspace.monthlyLimit === -1 ? "∞" : activeWorkspace.monthlyLimit} mail
+              <strong className="text-foreground">{activeWorkspace.monthlyUsage}</strong> / {activeWorkspace.monthlyLimit === -1 ? "∞" : activeWorkspace.monthlyLimit} mail
             </span>
             <span className="font-semibold text-[#a78bfa]">
               {activeWorkspace.monthlyLimit > 0 ? Math.round((activeWorkspace.monthlyUsage / activeWorkspace.monthlyLimit) * 100) : 0}%

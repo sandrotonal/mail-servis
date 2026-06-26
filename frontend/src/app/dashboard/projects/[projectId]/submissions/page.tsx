@@ -6,9 +6,9 @@ import { api } from "@/lib/api"
 import { toast } from "sonner"
 import { useWorkspace } from "@/context/WorkspaceContext"
 import {
-  ArrowLeft, Search, Filter, Trash2, Calendar, ShieldAlert,
-  Inbox, Loader2, ChevronRight, X, Globe, User, Clock, Check
-} from "lucide-react"
+  IconArrowLeft, IconSearch, IconFilter, IconTrash, IconCalendar,
+  IconInbox, IconLoader2, IconChevronRight, IconX, IconGlobe, IconUser, IconClock, IconCheck, IconAlertTriangle
+} from "@tabler/icons-react"
 import Link from "next/link"
 
 interface Submission {
@@ -73,20 +73,15 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
   const handleDelete = async (id: string) => {
     if (!confirm("Bu gönderimi kalıcı olarak silmek istediğinize emin misiniz?")) return
     try {
-      // Assuming submissions delete endpoint is implemented in form controller or we just filter locally
-      // Let's call DELETE /api/v1/forms/submissions/:id if existed, or let's mock/implement it in backend if needed
-      // Wait, let's delete via API
       await api.delete(`/forms/submissions/${id}`)
       toast.success("Gönderim silindi")
       if (selectedSub?._id === id) setSelectedSub(null)
       fetchSubmissions(pagination?.page || 1)
     } catch (err: any) {
-      // Fallback in case endpoint is pending, show success locally for testing or show error
       toast.error(err.message || "Silme işlemi sırasında hata oluştu.")
     }
   }
 
-  // Filter spam locally if backend returns all, or let user toggle
   const displayedSubmissions = submissions.filter(sub => {
     if (hideSpam && sub.isSpam) return false
     return true
@@ -95,20 +90,20 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
   if (loading && submissions.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#7342E2]" />
+        <IconLoader2 className="w-8 h-8 animate-spin text-[#7342E2]" />
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-foreground">
       {/* Header */}
       <div className="flex items-center gap-3">
         <Link
           href={`/dashboard/projects/${projectId}`}
-          className="w-10 h-10 rounded-xl border border-border flex items-center justify-center hover:bg-secondary transition-colors"
+          className="w-10 h-10 rounded-xl border border-border flex items-center justify-center hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <IconArrowLeft className="w-5 h-5" />
         </Link>
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Form Gönderimleri</h1>
@@ -119,17 +114,17 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
       {/* Toolbar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card border border-border p-4 rounded-2xl">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && fetchSubmissions(1)}
             placeholder="Gönderimlerde ara... (Enter'a basın)"
-            className="w-full pl-10 pr-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-[#7342E2]"
+            className="w-full pl-10 pr-4 py-2.5 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-[#7342E2]"
           />
         </div>
         <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold select-none">
+          <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold select-none text-foreground">
             <input
               type="checkbox"
               checked={hideSpam}
@@ -150,11 +145,11 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Table/List panel */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="card-premium p-0 overflow-hidden">
+          <div className="card-premium p-0 overflow-hidden bg-card">
             {displayedSubmissions.length === 0 ? (
               <div className="text-center py-20 bg-card">
-                <Inbox className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-                <p className="font-semibold text-sm">Hiç gönderim bulunamadı</p>
+                <IconInbox className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                <p className="font-semibold text-sm text-foreground">Hiç gönderim bulunamadı</p>
                 <p className="text-xs text-muted-foreground mt-1">Formunuz henüz hiç mesaj almamış.</p>
               </div>
             ) : (
@@ -169,7 +164,7 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
                       <th className="px-6 py-4 text-right">Aksiyon</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border/60 text-sm">
+                  <tbody className="divide-y divide-border/60 text-sm text-foreground">
                     {displayedSubmissions.map(sub => {
                       const email = sub.formData.email || sub.formData.Email || "Anonim"
                       const summary = Object.entries(sub.formData)
@@ -186,7 +181,7 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
                             selectedSub?._id === sub._id ? "bg-[#7342E2]/5 hover:bg-[#7342E2]/10" : ""
                           }`}
                         >
-                          <td className="px-6 py-4 font-semibold max-w-[150px] truncate">
+                          <td className="px-6 py-4 font-semibold max-w-[150px] truncate text-foreground">
                             {email}
                           </td>
                           <td className="px-6 py-4 text-muted-foreground max-w-[250px] truncate font-mono text-xs">
@@ -198,7 +193,7 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
                           <td className="px-6 py-4">
                             {sub.isSpam ? (
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-red-500/10 text-red-500 border border-red-500/20">
-                                <ShieldAlert className="w-3 h-3" />
+                                <IconAlertTriangle className="w-3 h-3" />
                                 Evet ({sub.spamScore})
                               </span>
                             ) : (
@@ -212,7 +207,7 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
                               onClick={() => handleDelete(sub._id)}
                               className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
                             >
-                              <Trash2 className="w-4.5 h-4.5" />
+                              <IconTrash className="w-4.5 h-4.5" />
                             </button>
                           </td>
                         </tr>
@@ -234,14 +229,14 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
                 <button
                   disabled={pagination.page === 1}
                   onClick={() => fetchSubmissions(pagination.page - 1)}
-                  className="px-3 py-1.5 border border-border rounded-lg text-xs font-medium hover:bg-secondary disabled:opacity-50 transition-colors"
+                  className="px-3 py-1.5 border border-border rounded-lg text-xs font-medium hover:bg-secondary disabled:opacity-50 transition-colors text-foreground"
                 >
                   Önceki
                 </button>
                 <button
                   disabled={pagination.page === pagination.totalPages}
                   onClick={() => fetchSubmissions(pagination.page + 1)}
-                  className="px-3 py-1.5 border border-border rounded-lg text-xs font-medium hover:bg-secondary disabled:opacity-50 transition-colors"
+                  className="px-3 py-1.5 border border-border rounded-lg text-xs font-medium hover:bg-secondary disabled:opacity-50 transition-colors text-foreground"
                 >
                   Sonraki
                 </button>
@@ -259,22 +254,22 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
-                className="card-premium p-6 space-y-6 sticky top-6 border-[#7342E2]/20 shadow-[#7342E2]/5 shadow-lg"
+                className="card-premium p-6 space-y-6 sticky top-6 border-[#7342E2]/20 shadow-[#7342E2]/5 shadow-lg text-foreground bg-card"
               >
                 {/* Header */}
                 <div className="flex justify-between items-start border-b border-border pb-4">
                   <div>
-                    <h3 className="font-semibold text-lg">Detaylı İnceleme</h3>
+                    <h3 className="font-semibold text-lg text-foreground">Detaylı İnceleme</h3>
                     <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5" />
+                      <IconCalendar className="w-3.5 h-3.5" />
                       {new Date(selectedSub.createdAt).toLocaleString()}
                     </p>
                   </div>
                   <button
                     onClick={() => setSelectedSub(null)}
-                    className="p-1 hover:bg-secondary rounded-lg transition-colors border border-border"
+                    className="p-1 hover:bg-secondary rounded-lg transition-colors border border-border text-muted-foreground hover:text-foreground"
                   >
-                    <X className="w-4 h-4" />
+                    <IconX className="w-4 h-4" />
                   </button>
                 </div>
 
@@ -287,7 +282,7 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
                       .map(([key, value]) => (
                         <div key={key} className="p-3 bg-secondary/30 border border-border rounded-xl">
                           <span className="text-xs font-semibold text-muted-foreground block mb-0.5 capitalize">{key}</span>
-                          <span className="text-sm font-medium break-all select-all font-mono">{String(value)}</span>
+                          <span className="text-sm font-medium break-all select-all font-mono text-foreground">{String(value)}</span>
                         </div>
                       ))}
                   </div>
@@ -298,17 +293,17 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
                   <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Cihaz & Konum</h4>
                   <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                     <div className="p-2.5 bg-secondary/20 border border-border rounded-xl flex items-center gap-2">
-                      <Globe className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                      <IconGlobe className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                       <div className="min-w-0">
                         <span className="text-[10px] text-muted-foreground block">IP Adresi</span>
-                        <span className="font-medium truncate block">{selectedSub.metadata.ip || "Bilinmiyor"}</span>
+                        <span className="font-medium truncate block text-foreground">{selectedSub.metadata.ip || "Bilinmiyor"}</span>
                       </div>
                     </div>
                     <div className="p-2.5 bg-secondary/20 border border-border rounded-xl flex items-center gap-2">
-                      <Clock className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                      <IconClock className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                       <div className="min-w-0">
                         <span className="text-[10px] text-muted-foreground block">Ülke</span>
-                        <span className="font-medium truncate block">{selectedSub.metadata.country || "Bilinmiyor"}</span>
+                        <span className="font-medium truncate block text-foreground">{selectedSub.metadata.country || "Bilinmiyor"}</span>
                       </div>
                     </div>
                   </div>
@@ -321,9 +316,9 @@ export default function ProjectSubmissionsPage({ params }: { params: Promise<{ p
                 </div>
               </motion.div>
             ) : (
-              <div className="card-premium p-8 text-center py-20 bg-muted/10 border-dashed border-border rounded-2xl flex flex-col items-center justify-center">
-                <Filter className="w-8 h-8 text-muted-foreground mb-3" />
-                <h4 className="font-semibold text-sm mb-1">Detayları Gör</h4>
+              <div className="card-premium p-8 text-center py-20 bg-muted/10 border-dashed border-border rounded-2xl flex flex-col items-center justify-center text-foreground">
+                <IconFilter className="w-8 h-8 text-muted-foreground mb-3" />
+                <h4 className="font-semibold text-sm mb-1 text-foreground">Detayları Gör</h4>
                 <p className="text-xs text-muted-foreground max-w-[200px] leading-relaxed">
                   Detayları, cihaz ve konum bilgilerini incelemek için soldaki tablodan bir gönderime tıklayın.
                 </p>

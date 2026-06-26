@@ -6,9 +6,9 @@ import { api } from "@/lib/api"
 import { toast } from "sonner"
 import { useWorkspace } from "@/context/WorkspaceContext"
 import {
-  ArrowLeft, Copy, Code, Eye, FileText, ChevronRight,
-  Terminal, ShieldCheck, Check, Sparkles, Loader2
-} from "lucide-react"
+  IconArrowLeft, IconCopy, IconCode, IconEye, IconFileText, IconChevronRight,
+  IconTerminal, IconShieldCheck, IconCheck, IconSparkles, IconLoader2
+} from "@tabler/icons-react"
 import Link from "next/link"
 
 interface EmbedData {
@@ -47,8 +47,8 @@ export default function ProjectEmbedPage({ params }: { params: Promise<{ project
           `/forms/${projectId}/embed`
         )
         setData(res.data)
-      } catch (err: any) {
-        toast.error(err.message || "Entegrasyon detayları yüklenemedi.")
+      } catch (err: unknown) {
+        toast.error(err instanceof Error ? err.message : "Entegrasyon detayları yüklenemedi.")
       } finally {
         setLoading(false)
       }
@@ -69,7 +69,7 @@ export default function ProjectEmbedPage({ params }: { params: Promise<{ project
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#7342E2]" />
+        <IconLoader2 className="w-8 h-8 animate-spin text-[#7342E2]" />
       </div>
     )
   }
@@ -122,7 +122,7 @@ export default function ProjectEmbedPage({ params }: { params: Promise<{ project
           href={`/dashboard/projects/${data.project.id}`}
           className="w-10 h-10 rounded-xl border border-border flex items-center justify-center hover:bg-secondary transition-colors"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <IconArrowLeft className="w-5 h-5" />
         </Link>
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Form Entegrasyonu</h1>
@@ -135,7 +135,7 @@ export default function ProjectEmbedPage({ params }: { params: Promise<{ project
         <div className="lg:col-span-2 space-y-6">
           <div className="card-premium p-6">
             <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-              <Code className="w-5 h-5 text-[#7342E2]" />
+              <IconCode className="w-5 h-5 text-[#7342E2]" />
               Entegrasyon Yöntemleri
             </h3>
 
@@ -167,7 +167,7 @@ export default function ProjectEmbedPage({ params }: { params: Promise<{ project
                   }}
                   className="inline-flex items-center gap-1 hover:text-white transition-colors"
                 >
-                  {copiedKey === "code" ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedKey === "code" ? <IconCheck className="w-3.5 h-3.5 text-emerald-500" /> : <IconCopy className="w-3.5 h-3.5" />}
                   {copiedKey === "code" ? "Kopyalandı" : "Kodu Kopyala"}
                 </button>
               </div>
@@ -195,14 +195,14 @@ export default function ProjectEmbedPage({ params }: { params: Promise<{ project
                 onClick={() => copyToClipboard(data.embed.endpoint, "endpoint")}
                 className="p-2 bg-background border border-border hover:bg-secondary rounded-lg transition-colors shrink-0"
               >
-                {copiedKey === "endpoint" ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 text-muted-foreground" />}
+                {copiedKey === "endpoint" ? <IconCheck className="w-3.5 h-3.5 text-emerald-500" /> : <IconCopy className="w-3.5 h-3.5 text-muted-foreground" />}
               </button>
             </div>
           </div>
 
           <div className="card-premium p-6 space-y-3 bg-[#7342E2]/5 border-[#7342E2]/20">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-[#7342E2]" />
+              <IconShieldCheck className="w-5 h-5 text-[#7342E2]" />
               <h3 className="font-semibold text-sm">CORS & Güvenlik</h3>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
@@ -213,7 +213,7 @@ export default function ProjectEmbedPage({ params }: { params: Promise<{ project
               className="text-xs font-semibold text-[#7342E2] inline-flex items-center gap-1 hover:underline"
             >
               CORS Ayarlarını Düzenle
-              <ChevronRight className="w-3 h-3" />
+              <IconChevronRight className="w-3 h-3" />
             </Link>
           </div>
         </div>

@@ -2,10 +2,11 @@
 
 EmailJS, Web3Forms, Formspree ve Basin benzeri self-hosted SaaS iletişim formu platformu.
 
-##  Özellikler
+## ⭐ Özellikler
 
 - **Form Builder** - Sürükle-bırak form oluşturucu (Text, Email, Phone, File Upload, Select, vb.)
 - **API Entegrasyonu** - REST API ile kolay entegrasyon, API Key yönetimi
+- **OAuth Sosyal Giriş** - Google ve GitHub hesapları ile tek tıkla güvenli kayıt ve giriş sistemi
 - **Smart Email** - Nodemailer + BullMQ Queue ile güvenilir email gönderimi
 - **Multi-SMTP Failover** - SMTP başarısız olursa otomatik diğer SMTP'ye geçer
 - **Anti-Spam** - Honeypot, Rate Limiting, IP Reputation, Disposable Email Detection
@@ -16,15 +17,16 @@ EmailJS, Web3Forms, Formspree ve Basin benzeri self-hosted SaaS iletişim formu 
 - **Multi-Tenant** - Birden fazla workspace, proje ve kullanıcı desteği
 - **Dosya Yükleme** - PDF, DOCX, XLSX, ZIP, PNG, JPG desteği
 - **Domain Verification** - SPF, DKIM, DMARC doğrulama
+- **Premium UI & Dinamik Header** - Sayfalar genelinde mor-karanlık WebGL temaları, cam efektleri (Glassmorphism), Sonner ile premium bildirimler ve açık/koyu sayfa geçişlerine uyumlu dinamik kontrastlı Header navbarı.
 
-##  Tech Stack
+## 🚀 Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
 | Backend | Node.js, Express.js, MongoDB, Mongoose |
-| Frontend | Next.js 15, React, TailwindCSS, Shadcn/UI |
+| Frontend | Next.js 15, React, TailwindCSS, Shadcn/UI, Framer Motion |
 | Queue | BullMQ, Redis |
-| Auth | JWT, bcrypt, Refresh Tokens |
+| Auth | JWT, bcrypt, Google & GitHub OAuth, Refresh Tokens |
 | Email | Nodemailer, SMTP Pooling |
 | Validation | Joi, Zod |
 | Logging | Winston |
@@ -32,7 +34,7 @@ EmailJS, Web3Forms, Formspree ve Basin benzeri self-hosted SaaS iletişim formu 
 | Storage | AWS S3, Cloudflare R2, MinIO |
 | Deployment | Docker, Docker Compose, Nginx |
 
-##  Proje Yapısı
+## 📁 Proje Yapısı
 
 ```
 mail-servis/
@@ -67,7 +69,7 @@ mail-servis/
 └── README.md
 ```
 
-##  Hızlı Başlangıç
+## Hızlı Başlangıç
 
 ### Gereksinimler
 - Node.js 20+
@@ -101,14 +103,14 @@ docker-compose up -d
 
 Bu komut ile aşağıdaki servisler ayağa kalkar:
 - **Backend** → http://localhost:5000
-- **Frontend** → http://localhost:3000
+- **Frontend** → http://localhost:3000 (veya port 3001)
 - **API Docs** → http://localhost:5000/api-docs
 - **MongoDB** → localhost:27017
 - **Redis** → localhost:6379
 - **MinIO** → http://localhost:9001
 - **Nginx** → http://localhost:80
 
-## 🔗 API Endpoints
+## API Endpoints
 
 ### Auth
 | Method | Endpoint | Açıklama |
@@ -117,9 +119,11 @@ Bu komut ile aşağıdaki servisler ayağa kalkar:
 | POST | `/api/v1/auth/login` | Giriş yap |
 | POST | `/api/v1/auth/logout` | Çıkış yap |
 | POST | `/api/v1/auth/refresh-token` | Token yenile |
-| POST | `/api/v1/auth/forgot-password` | Şifre sıfırlama |
+| POST | `/api/v1/auth/forgot-password` | Şifre sıfırlama talebi |
 | POST | `/api/v1/auth/reset-password` | Şifre sıfırla |
 | GET | `/api/v1/auth/me` | Kullanıcı bilgisi |
+| GET | `/api/v1/auth/google` | Google ile Giriş / Kayıt |
+| GET | `/api/v1/auth/github` | GitHub ile Giriş / Kayıt |
 
 ### Form API
 | Method | Endpoint | Açıklama |
@@ -134,7 +138,7 @@ Bu komut ile aşağıdaki servisler ayağa kalkar:
 | GET | `/health` | Sağlık kontrolü |
 | GET | `/api-docs` | Swagger dökümantasyonu |
 
-##  Planlar
+## Planlar
 
 | Plan | Aylık Mail | Özellikler |
 |------|-----------|------------|
@@ -143,7 +147,7 @@ Bu komut ile aşağıdaki servisler ayağa kalkar:
 | Pro | 50,000 | Profesyonel |
 | Business | Sınırsız | Kurumsal |
 
-##  Güvenlik
+## Güvenlik
 
 - Helmet ile HTTP header güvenliği
 - CORS yapılandırması
@@ -156,7 +160,7 @@ Bu komut ile aşağıdaki servisler ayağa kalkar:
 - Refresh token rotasyonu
 - bcrypt ile şifre hashleme
 
-##  Production Deployment
+## Production Deployment
 
 1. **SSL Sertifikası**
 ```bash
@@ -184,7 +188,7 @@ docker-compose logs -f backend
 docker-compose logs -f nginx
 ```
 
-##  Performans Optimizasyonları
+## Performans Optimizasyonları
 
 - MongoDB index optimizasyonu
 - Redis caching
@@ -196,7 +200,7 @@ docker-compose logs -f nginx
 - Node.js cluster mode (opsiyonel)
 - MongoDB connection pooling
 
-##  Test
+## Test
 
 ```bash
 # Backend testleri
@@ -206,7 +210,7 @@ cd backend && npm test
 cd backend && npm run lint
 ```
 
-##  Katkıda Bulunma
+## Katkıda Bulunma
 
 1. Fork edin
 2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
@@ -214,6 +218,6 @@ cd backend && npm run lint
 4. Branch'inizi push edin
 5. Pull Request açın
 
-##  Lisans
+## Lisans
 
 MIT License - Detaylar için [LICENSE](LICENSE) dosyasına bakın.

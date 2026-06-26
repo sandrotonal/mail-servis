@@ -1,21 +1,12 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import {
   Zap, LockKeyhole, Fingerprint, ArrowRightCircle,
-  Menu, X, CheckCircle, Shield, Globe, Code, BarChart3,
+  CheckCircle, Shield, Globe, Code, BarChart3,
 } from "lucide-react"
-
-// ─── Logo SVG (per yap.md spec) ───────────────────────────────────────────────
-function Logo({ fill = "#192837", size = 32 }: { fill?: string; size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 256 256" fill={fill} xmlns="http://www.w3.org/2000/svg">
-      <path d="M 64 128 L 64.5 128 L 32 95 L 0 64 L 0 0 L 64 0 L 128 64 L 128 64.5 L 161 32 L 192 0 L 256 0 L 256 64 L 192 128 L 128 128 L 128 192 L 96 223 L 63.5 256 L 0 256 L 0 192 Z M 256 192 L 224 223 L 191.5 256 L 128 256 L 128 192 L 192 128 L 256 128 Z" />
-    </svg>
-  )
-}
+import { Header, Logo } from "@/components/layout/Header"
 
 // ─── Framer Motion variants ───────────────────────────────────────────────────
 const fadeUp = {
@@ -25,15 +16,6 @@ const fadeUp = {
     transition: { delay: i * 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
   }),
 }
-
-// ─── Nav links ───────────────────────────────────────────────────────────────
-const NAV_LINKS = [
-  { label: "Özellikler", href: "#features" },
-  { label: "Planlar", href: "#pricing" },
-  { label: "Entegrasyon", href: "#integrations" },
-  { label: "Belgeler", href: "#docs" },
-  { label: "Destek", href: "#support" },
-]
 
 const FEATURES = [
   { icon: Shield, title: "Spam Koruması", desc: "Honeypot, rate-limit ve ML tabanlı spam filtresi ile %99.9 temiz gelen kutusu" },
@@ -45,8 +27,6 @@ const FEATURES = [
 ]
 
 export default function LandingPage() {
-  const [mobileOpen, setMobileOpen] = useState(false)
-
   return (
     <div className="relative min-h-screen overflow-hidden" style={{ fontFamily: "var(--font-body)", color: "var(--color-text)" }}>
       {/* ── Background Video ── */}
@@ -62,147 +42,13 @@ export default function LandingPage() {
       <div className="absolute inset-0 z-0 bg-gradient-to-b from-white/25 via-white/10 to-white/60" />
 
       {/* ── NAVBAR ── */}
-      <nav className="relative z-10 w-full" style={{ maxWidth: 1280, margin: "0 auto" }}>
-        <div className="flex items-center justify-between px-5 py-4 sm:px-8 sm:py-5">
-          {/* Left: Logo */}
-          <Link href="/" className="flex items-center gap-2.5" aria-label="MailServis">
-            <Logo fill="#192837" size={32} />
-            <span style={{ fontFamily: "var(--font-heading)", fontSize: "1.15rem", color: "var(--color-text)", letterSpacing: "-0.01em" }}>
-              MailServis
-            </span>
-          </Link>
-
-          {/* Center: Desktop nav links */}
-          <div className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium transition-opacity hover:opacity-70"
-                style={{ color: "var(--color-text)" }}
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-
-          {/* Right: Desktop CTA buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            <Link href="/auth/login"
-              className="px-5 py-2.5 rounded-full text-sm font-semibold transition-all active:scale-95"
-              style={{ background: "#F2F2EE", color: "var(--color-text)" }}
-            >
-              Giriş Yap
-            </Link>
-            <Link href="/auth/register"
-              className="px-5 py-2.5 rounded-full text-sm font-semibold text-white transition-all active:scale-95"
-              style={{ background: "#7342E2", boxShadow: "0 4px 20px rgba(115,66,226,0.3)" }}
-            >
-              Ücretsiz Başla
-            </Link>
-          </div>
-
-          {/* Mobile: Hamburger */}
-          <button
-            id="mobile-menu-toggle"
-            className="md:hidden p-2 rounded-xl transition-colors hover:bg-black/10"
-            onClick={() => setMobileOpen(true)}
-            aria-label="Menüyü aç"
-          >
-            <Menu size={24} color="var(--color-text)" />
-          </button>
-        </div>
-      </nav>
-
-      {/* ── MOBILE MENU ── */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              key="backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-40"
-              style={{ background: "rgba(25,40,55,0.35)", backdropFilter: "blur(4px)" }}
-              onClick={() => setMobileOpen(false)}
-            />
-
-            {/* Sheet */}
-            <motion.div
-              key="sheet"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              style={{
-                position: "fixed", top: 0, right: 0, bottom: 0, zIndex: 50,
-                width: "min(88vw, 360px)", height: "100dvh",
-                background: "#CFC8C5",
-                boxShadow: "-12px 0 48px rgba(25,40,55,0.18)",
-              }}
-            >
-              {/* Sheet header */}
-              <div className="flex items-center justify-between px-6 py-5">
-                <Logo fill="#192837" size={28} />
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center rounded-full"
-                  style={{ width: 40, height: 40, background: "rgba(25,40,55,0.10)" }}
-                  aria-label="Menüyü kapat"
-                >
-                  <X size={20} color="#192837" />
-                </motion.button>
-              </div>
-
-              {/* Divider */}
-              <div style={{ height: 1, background: "rgba(25,40,55,0.12)", margin: "0 24px" }} />
-
-              {/* Nav links */}
-              <nav className="p-6 space-y-1">
-                {NAV_LINKS.map((link, i) => (
-                  <motion.a
-                    key={link.href}
-                    href={link.href}
-                    custom={i}
-                    initial={{ opacity: 0, x: 24 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.18 + i * 0.07, duration: 0.4 }}
-                    onClick={() => setMobileOpen(false)}
-                    className="block px-4 py-3 rounded-xl font-medium transition-colors hover:bg-black/10"
-                    style={{ fontSize: "1.1rem", color: "var(--color-text)" }}
-                  >
-                    {link.label}
-                  </motion.a>
-                ))}
-              </nav>
-
-              {/* CTA buttons */}
-              <div className="absolute bottom-8 left-6 right-6 space-y-3">
-                <Link href="/auth/register" onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center w-full py-3.5 rounded-full text-white font-semibold"
-                  style={{ background: "#7342E2", fontSize: "0.95rem" }}>
-                  Ücretsiz Başla
-                </Link>
-                <Link href="/auth/login" onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center w-full py-3.5 rounded-full font-semibold"
-                  style={{ background: "#F2F2EE", color: "var(--color-text)", fontSize: "0.95rem" }}>
-                  Giriş Yap
-                </Link>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      <Header />
 
       {/* ── HERO CONTENT ── */}
       <div className="relative z-10 w-full" style={{ maxWidth: 1280, margin: "0 auto" }}>
         <div
           className="flex flex-col items-center px-5 sm:px-8"
-          style={{ paddingTop: "clamp(40px, 8vw, 72px)", paddingBottom: 48 }}
+          style={{ paddingTop: "clamp(100px, 15vw, 150px)", paddingBottom: 48 }}
         >
           <div style={{ maxWidth: 660, width: "100%", textAlign: "center" }}>
             {/* H1 */}

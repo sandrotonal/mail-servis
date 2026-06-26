@@ -33,7 +33,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="relative w-screen min-h-screen bg-black overflow-x-hidden flex items-center justify-center p-4 py-12">
+    <main className="relative w-full min-h-screen bg-black overflow-x-hidden flex items-center justify-center p-4 py-12">
       {/* WebGL Smokey Background */}
       <SmokeyBackground backdropBlurAmount="lg" color="#7342E2" className="absolute inset-0" />
 
@@ -42,7 +42,7 @@ export default function RegisterPage() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-md p-8 md:p-10 bg-black/40 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl space-y-6"
+        className="relative z-10 w-full max-w-md p-6 sm:p-8 md:p-10 bg-black/40 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl space-y-6"
       >
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-semibold tracking-tight text-white">Hesap Oluştur</h2>
@@ -179,6 +179,10 @@ export default function RegisterPage() {
           <div className="grid grid-cols-2 gap-4">
             <button
               type="button"
+              onClick={() => {
+                const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+                window.location.href = `${apiBase}/auth/google?origin=${window.location.origin}`;
+              }}
               className="flex items-center justify-center gap-2 py-2.5 px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white text-sm font-semibold transition-colors"
             >
               <Chrome className="w-4.5 h-4.5" />
@@ -186,6 +190,10 @@ export default function RegisterPage() {
             </button>
             <button
               type="button"
+              onClick={() => {
+                const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+                window.location.href = `${apiBase}/auth/github?origin=${window.location.origin}`;
+              }}
               className="flex items-center justify-center gap-2 py-2.5 px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white text-sm font-semibold transition-colors"
             >
               <Github className="w-4.5 h-4.5" />

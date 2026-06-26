@@ -23,7 +23,11 @@ const getRedisClient = () => {
     });
 
     redisClient.on('error', (err) => {
-      logger.error('Redis client error:', err);
+      if (config.env === 'development') {
+        console.log('⚠️  Redis unavailable (optional in dev)');
+      } else {
+        logger.error('Redis client error:', err);
+      }
     });
   }
 

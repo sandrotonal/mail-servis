@@ -43,6 +43,8 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
   refreshTokens: [String],
   lastLogin: Date,
+  socialProvider: String,
+  socialProviderId: String,
   isActive: {
     type: Boolean,
     default: true,

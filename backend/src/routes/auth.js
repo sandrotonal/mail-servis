@@ -14,4 +14,10 @@ router.post('/reset-password', authLimiter, validate(resetPasswordSchema), authC
 router.get('/verify-email', authController.verifyEmail);
 router.get('/me', authenticate, authController.getMe);
 
+// OAuth routes
+router.get('/google', authController.googleRedirect);
+router.get('/google/callback', authController.googleCallback);
+router.get('/github', authController.githubRedirect);
+router.get('/github/callback', authController.githubCallback);
+
 module.exports = router;

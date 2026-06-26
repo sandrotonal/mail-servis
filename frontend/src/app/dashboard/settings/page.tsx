@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { toast } from "sonner"
 import { api } from "@/lib/api"
 import { useWorkspace } from "@/context/WorkspaceContext"
-import { Settings, User, Bell, Shield, Trash2, Loader2, Save } from "lucide-react"
+import { IconSettings, IconUser, IconBell, IconShield, IconTrash, IconLoader2, IconDeviceFloppy } from "@tabler/icons-react"
 
 export default function SettingsPage() {
   const { activeWorkspace, refreshWorkspaces } = useWorkspace()
@@ -45,7 +45,7 @@ export default function SettingsPage() {
   const sections = [
     {
       id: "workspace",
-      icon: Settings,
+      icon: IconSettings,
       title: "Workspace Ayarları",
       description: "Workspace adı ve genel ayarlar",
       content: (
@@ -64,7 +64,7 @@ export default function SettingsPage() {
                 disabled={saving || !wsName.trim() || wsName === activeWorkspace?.name}
                 className="inline-flex items-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 disabled:opacity-50 transition-colors shrink-0"
               >
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                {saving ? <IconLoader2 className="w-4 h-4 animate-spin" /> : <IconDeviceFloppy className="w-4 h-4" />}
                 Kaydet
               </button>
             </div>
@@ -85,7 +85,7 @@ export default function SettingsPage() {
     },
     {
       id: "notifications",
-      icon: Bell,
+      icon: IconBell,
       title: "Bildirimler",
       description: "Email bildirimleri ve alertler",
       content: (
@@ -110,7 +110,7 @@ export default function SettingsPage() {
     },
     {
       id: "danger",
-      icon: Trash2,
+      icon: IconTrash,
       title: "Tehlikeli Bölge",
       description: "Geri alınamaz işlemler",
       content: (
@@ -124,7 +124,7 @@ export default function SettingsPage() {
               onClick={deleteWorkspace}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-colors"
             >
-              <Trash2 className="w-4 h-4" />
+              <IconTrash className="w-4 h-4" />
               Workspace&apos;i Sil
             </button>
           </div>

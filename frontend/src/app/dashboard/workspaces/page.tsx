@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
 import { toast } from "sonner"
-import { Plus, FolderKanban, Settings, Trash2, Users, Loader2, Check } from "lucide-react"
+import {
+  IconPlus, IconFolder, IconSettings, IconTrash, IconLoader2, IconCheck
+} from "@tabler/icons-react"
 import { useWorkspace } from "@/context/WorkspaceContext"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -83,7 +85,7 @@ export default function WorkspacesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#7342E2]" />
+        <IconLoader2 className="w-8 h-8 animate-spin text-[#7342E2]" />
       </div>
     )
   }
@@ -100,7 +102,7 @@ export default function WorkspacesPage() {
           onClick={() => setShowCreate(!showCreate)}
           className="inline-flex items-center gap-2 rounded-xl bg-[#7342E2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7342E2]/90 transition-colors shadow-sm"
         >
-          <Plus className="h-4 w-4" />
+          <IconPlus className="h-4 w-4" />
           Yeni Çalışma Alanı
         </button>
       </div>
@@ -117,13 +119,13 @@ export default function WorkspacesPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between border-b border-border/60 pb-4 mb-6">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <FolderKanban className="w-5.5 h-5.5 text-[#7342E2]" />
+                <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                  <IconFolder className="w-5.5 h-5.5 text-[#7342E2]" />
                   Yeni Çalışma Alanı
                 </h2>
                 <button
                   onClick={() => setShowCreate(false)}
-                  className="text-muted-foreground hover:text-white transition-colors text-lg font-bold"
+                  className="text-muted-foreground hover:text-foreground transition-colors text-lg font-bold"
                 >
                   ×
                 </button>
@@ -145,9 +147,9 @@ export default function WorkspacesPage() {
                   <button
                     onClick={createWorkspace}
                     disabled={creating || !newName.trim()}
-                    className="flex-1 btn-primary"
+                    className="flex-1 btn-primary text-white"
                   >
-                    {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                    {creating ? <IconLoader2 className="w-4 h-4 animate-spin" /> : <IconPlus className="w-4 h-4" />}
                     Oluştur
                   </button>
                   <button
@@ -177,15 +179,15 @@ export default function WorkspacesPage() {
             >
               {isActive && (
                 <div className="absolute top-4 right-4 flex items-center gap-1 bg-[#7342E2]/10 text-[#7342E2] px-2.5 py-1 rounded-full text-xs font-semibold border border-[#7342E2]/20">
-                  <Check className="w-3 h-3" />
+                  <IconCheck className="w-3 h-3" />
                   Aktif
                 </div>
               )}
 
-              <div className="space-y-4">
+              <div className="space-y-4 text-foreground">
                 <div className="flex items-center gap-3">
                   <div className="rounded-xl bg-[#7342E2]/10 p-2.5">
-                    <FolderKanban className="h-5 w-5 text-[#7342E2]" />
+                    <IconFolder className="h-5 w-5 text-[#7342E2]" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-base">{ws.name}</h3>
@@ -216,7 +218,7 @@ export default function WorkspacesPage() {
                     className="p-2 rounded-lg border border-border bg-background hover:bg-secondary transition-colors"
                     title="Ayarlar"
                   >
-                    <Settings className="h-4 w-4 text-muted-foreground" />
+                    <IconSettings className="h-4 w-4 text-muted-foreground" />
                   </button>
                   <button
                     onClick={() => deleteWorkspace(ws._id, ws.name)}
@@ -224,7 +226,7 @@ export default function WorkspacesPage() {
                     className="p-2 rounded-lg border border-border bg-background hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 transition-colors disabled:opacity-40"
                     title="Sil"
                   >
-                    <Trash2 className="h-4 w-4 text-muted-foreground" />
+                    <IconTrash className="h-4 w-4 text-muted-foreground" />
                   </button>
                 </div>
               </div>

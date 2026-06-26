@@ -80,6 +80,52 @@ class AuthService {
     };
   }
 
+  async socialLogin({ email, name, provider, providerId }) {
+    let user = await userRepository.findByEmail(email);
+
+    if (!user) {
+      const randomPassword = crypto.randomBytes(16).toString('hex');
+      user = await userRepository.create({
+        name,
+        email,
+        password: randomPassword,
+        isEmailVerified: true,
+      });
+
+      const wsName = `${name}'s Workspace`;
+      const slug = `${wsName.toLowerCase().replace(/\s+/g, '-')}-${crypto.randomBytes(4).toString('hex')}`;
+
+      const workspace = await workspaceRepository.create({
+        name: wsName,
+        slug,
+        owner: user._id,
+      });
+
+      await WorkspaceMember.create({
+        workspace: workspace._id,
+        user: user._id,
+        role: 'owner',
+        status: 'active',
+        joinedAt: new Date(),
+      });
+    }
+
+    user.lastLogin = new Date();
+    user.socialProvider = provider;
+    user.socialProviderId = providerId;
+    
+    const accessToken = this.generateToken(user._id);
+    const refreshToken = this.generateRefreshToken(user._id);
+    user.refreshTokens.push(refreshToken);
+    await user.save();
+
+    return {
+      user: user.toSafeObject(),
+      accessToken,
+      refreshToken,
+    };
+  }
+
   async login({ email, password }) {
     const user = await userRepository.findByEmailWithPassword(email);
     if (!user) {

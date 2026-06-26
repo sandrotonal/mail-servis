@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Sidebar } from "@/components/layout/sidebar"
 import { cn } from "@/lib/utils"
-import { Menu } from "lucide-react"
+import { IconMenu2 } from "@tabler/icons-react"
 import { WorkspaceProvider } from "@/context/WorkspaceContext"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -20,7 +20,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             className="p-2 hover:bg-secondary rounded-lg transition-colors"
             aria-label="Toggle menu"
           >
-            <Menu className="w-5 h-5" />
+            <IconMenu2 className="w-5 h-5" />
           </button>
           <span className="ml-3 font-semibold text-lg">MailServis</span>
         </div>

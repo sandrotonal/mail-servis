@@ -50,4 +50,53 @@ const getStats = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: { statusCounts: counts } });
 });
 
-module.exports = { getAll, getById, updateStatus, addNote, getStats };
+const assignLead = asyncHandler(async (req, res) => {
+  const lead = await leadRepository.findOne({ _id: req.params.leadId, workspace: req.params.workspaceId });
+  if (!lead) throw new NotFoundError('Lead not found.');
+  
+  lead.assignedTo = req.body.userId;
+  lead.assignedAt = new Date();
+  
+  if (!lead.activities) lead.activities = [];
+  lead.activities.push({
+    type: 'assigned',
+    description: 'Lead assigned',
+    performedBy: req.user._id,
+    metadata: { assignedTo: req.body.userId }
+  });
+  
+  await lead.save();
+  
+  res.status(200).json({ success: true, data: lead });
+});
+
+const updatePriority = asyncHandler(async (req, res) => {
+  const lead = await leadRepository.findOne({ _id: req.params.leadId, workspace: req.params.workspaceId });
+  if (!lead) throw new NotFoundError('Lead not found.');
+  
+  lead.priority = req.body.priority;
+  await lead.save();
+  
+  res.status(200).json({ success: true, data: lead });
+});
+
+const setFollowUp = asyncHandler(async (req, res) => {
+  const lead = await leadRepository.findOne({ _id: req.params.leadId, workspace: req.params.workspaceId });
+  if (!lead) throw new NotFoundError('Lead not found.');
+  
+  lead.nextFollowUp = new Date(req.body.date);
+  await lead.save();
+  
+  res.status(200).json({ success: true, data: lead });
+});
+
+module.exports = { 
+  getAll, 
+  getById, 
+  updateStatus, 
+  addNote, 
+  getStats, 
+  assignLead, 
+  updatePriority, 
+  setFollowUp 
+};
