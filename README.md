@@ -2,7 +2,7 @@
 
 EmailJS, Web3Forms, Formspree ve Basin benzeri self-hosted SaaS iletişim formu platformu.
 
-## ⭐ Özellikler
+## Özellikler
 
 - **Form Builder** - Sürükle-bırak form oluşturucu (Text, Email, Phone, File Upload, Select, vb.)
 - **API Entegrasyonu** - REST API ile kolay entegrasyon, API Key yönetimi
@@ -19,7 +19,7 @@ EmailJS, Web3Forms, Formspree ve Basin benzeri self-hosted SaaS iletişim formu 
 - **Domain Verification** - SPF, DKIM, DMARC doğrulama
 - **Premium UI & Dinamik Header** - Sayfalar genelinde mor-karanlık WebGL temaları, cam efektleri (Glassmorphism), Sonner ile premium bildirimler ve açık/koyu sayfa geçişlerine uyumlu dinamik kontrastlı Header navbarı.
 
-## 🚀 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
@@ -34,7 +34,7 @@ EmailJS, Web3Forms, Formspree ve Basin benzeri self-hosted SaaS iletişim formu 
 | Storage | AWS S3, Cloudflare R2, MinIO |
 | Deployment | Docker, Docker Compose, Nginx |
 
-## 📁 Proje Yapısı
+## Proje Yapısı
 
 ```
 mail-servis/
